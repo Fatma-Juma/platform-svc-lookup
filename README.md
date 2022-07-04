@@ -1,2 +1,1 @@
-# platform-svc-lookup
-
+## Lookup Service

@@ -1,0 +1,169 @@
+#%RAML 1.0 Library
+
+types:
+  Session:
+    type: object
+    description: The object to hold the session related data.
+    properties:
+      updateCount:
+        type: integer
+        description: Tracks the number of times the current session is updated.
+        required: true
+      state:
+        type: string
+        description: The state of the session. Valid values are FULL and PROVISIONAL.
+        required: true
+      substate:
+        type: string
+        description: The substate of the session. Valid values are CREATED and CONFIRMED.
+        required: true
+      dataMap:
+        type: object
+        description: The Map of data keys and SessionEntry that in turn contains a dataItem.
+        required: false
+      creationTime:
+        type: long
+        description: The created time of the session in milliseconds.
+        required: true
+      expirationTime:
+        type: long
+        description: The expiry time of the session in milliseconds.
+        required: true
+  Cookies:
+    type: object
+    description: The Cookies object containing sid and psid details.
+    properties:
+      sid:
+        type: string
+        description: The session cookie value is a sessionRequestIdentifier concatenated with the DateTime.
+The first 144 chars form the sessionRequestIdentifier and the last 12 chars form the DateTime in YYYYMMDDHHmm format.
+The sessionRequestIdentifier is the combination of dataCenterID, delimiter and the encrypted form of sessionInstanceIdentifier which is a combination of 49 digit sessionIdentifier and 32 chars UUID.
+The sessionIdentifier is a combination of the dataCenterID, delimiter , randomChars and the 32 chars UUID.
+        required: false
+        example: rocklin.KywhdTQLyhYUHuMerQRe-FZxNBqln-xFDjUMUJ3H-zApEtQBFSe8iK_Aq46xSwf14qLUlhH5E5ZVfM3fAMj2eOGIj5wgPJphWBHxvCCPjVMPOWf-Avi3nc0sfZpydVo9dGvD1ZM=202104271718
+      psid:
+        type: string
+        description: The provisional session cookie value is a provisional sessionRequestIdentifier concatenated with the DateTime.
+The first 144 chars form the sessionRequestIdentifier and the last 12 chars form the DateTime in YYYYMMDDHHmm format.
+The sessionRequestIdentifier is the combination of dataCenterID, delimiter and the encrypted form of sessionInstanceIdentifier which is a combination of 49 digit sessionIdentifier and 32 chars UUID.
+The sessionIdentifier is a combination of the dataCenterID, delimiter , randomChars and the 32 chars UUID.
+        required: false
+        example: rocklin.cX9qzANAS31GqPPmbpl7_HlBx-XQp9TGPmWNuWsE3Xk6dqe10FHkMpVgU3d2ZiC7e3sv1HfrBCvBhbwdflSGUmDy9NsIY3JjDJ1OaHmxU-uaRbFmKEY7ewsDEFjaSe5lfUVy_ms=202104240222
+  SessionEntry:
+    type: object
+    description: The session entry object.
+    properties:
+      dataItem:
+        type: string
+        description: The string representation of the data keys value.
+        required: true
+      idleTime:
+        type: integer
+        description: Time in milliseconds for which entry is to remain if not touched. Untouched entry will be removed after this time. Only to be passed in the update session request.
+        required: false
+        default: 0
+      updateCount:
+        type: integer
+        description: Tracks the number of times the current session data type value is updated.
+        required: true
+      expirationTime:
+        type: long
+        description: The expiry time of the session entry in milliseonds. Only to be passed in the update/get session response.
+        required: false
+  Error:
+    type: object
+    description: The response object in case of any error.
+    properties:
+      timestamp:
+        type: datetime
+        description: The timestamp of the error response.
+        required: true
+      status:
+        type: integer
+        description: The http status error code.
+        required: true
+      error:
+        type: string
+        description: The status error description.
+        required: true
+      message:
+        type: string
+        description: The cause of the error.
+        required: true
+  SessionResolveRequest:
+    type: object
+    description: The create/resolve session request.
+    properties:
+      cookies:
+        type: Cookies
+        description: The cookie details.
+        required: false
+      identity:
+        type: string
+        description: The identity state of the session. The string representation of the identity state value.
+        required: false
+      method:
+        type: string
+        description: The method (GET or POST) of the request for which the session needs to be created/resolved.
+        required: true
+        example: POST
+  SessionIdentityChangeRequest:
+    type: object
+    description: The session's identity change request.
+    properties:
+      identity:
+        type: string
+        description: The identity state of the session. The string representation of the identity state value.
+        required: true
+  SessionUpdateRequest:
+    type: object
+    description: The update session request.
+    properties:
+      updateCount:
+        type: integer
+        description: Tracks the number of times the current session is updated.
+        required: true
+      dataMap:
+        type: object
+        description: The Map of data keys and SessionEntry that in turn contains a dataItem.
+        required: true
+  SessionResolveResponse:
+    type: object
+    description: The create/resolve response sent to the client.
+    properties:
+      sessionIdentifier:
+        type: string
+        description: The unique session identifier.
+        required: true
+      sessionRequestIdentifier:
+        type: string
+        description: The session request identifier for operating on the session. Combination of the session identifier and the secure key.
+        required: true
+      cookies:
+        type: Cookies
+        description: The cookie sid and psid details.
+        required: true
+      identity:
+        type: string
+        description: The identity state of the session. The string representation of the identity state value.
+        required: false
+      session:
+        type: Session
+         description: The object to hold the session related data.
+         required: false
+  SessionIdentityChangeResponse:
+    type: object
+    description: The create/resolve response sent to the client.
+    properties:
+      sessionRequestIdentifier:
+        type: string
+        description: The session request identifier for operating on the session. Combination of the session identifier and the secure key.
+        required: true
+      cookies:
+        type: Cookies
+        description: The cookie sid and psid details.
+        required: true
+      identity:
+        type: string
+        description: The identity state of the session. The string representation of the identity state value.
+        required: true
