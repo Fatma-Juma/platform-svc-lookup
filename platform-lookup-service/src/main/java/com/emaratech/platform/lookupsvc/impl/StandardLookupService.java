@@ -66,6 +66,9 @@ public class StandardLookupService implements LookupService {
     public List<?> findAll(String entityName) throws ResponseStatusException {
         LOG.info("Fetching the all records from: {} ", entityName);
         Class clazz = ConversionUtils.getClassFromString(entityName);
+        if (Objects.isNull(clazz)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Entity Name not found: [" + entityName + "]");
+        }
         List<?> listData;
         try {
             listData = ConversionUtils.jsonArrayToList(lookupStoreRepository.findAll(entityName), clazz, objectMapper);
@@ -77,7 +80,7 @@ public class StandardLookupService implements LookupService {
 
     /** {@inheritDoc} */
     @Override
-    public Object findById(String entityName, Long id) throws ResponseStatusException {
+    public List<?> findById(String entityName, Long id) throws ResponseStatusException {
         try {
             List<?> listData = getExistingData(entityName);
             if (!CollectionUtils.isEmpty(listData)) {
@@ -93,15 +96,13 @@ public class StandardLookupService implements LookupService {
 
                         }).collect(Collectors.toList());
 
-                return listData.get(0);
+                return listData;
             } else {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, " No lookup data found for [" + entityName + " ] by [" + id + "]");
             }
         } catch (InvalidDataException ex) {
             LOG.error("Error during the processing of method findById{}", ex.getMessage());
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
-        } catch (Exception ex) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), ex);
         }
 
     }

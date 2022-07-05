@@ -1,0 +1,41 @@
+{
+  "lookupTye": "Country",
+  "lookupList": [
+    {
+      "countryId": 101,
+      "regionId": 13,
+      "countryNameEn": "United Arab Emirates",
+      "countryNameAr": "الإمارات",
+      "countryCode": "ARE",
+      "nationality": "EMIRATES",
+      "isTourist": 0,
+      "isGcc": 1,
+      "isMaidAllowed": 0,
+      "isEntryAllowed": 0,
+      "isReciprocityAllowed": 0,
+      "isArchived": 0,
+      "countryIso": "AE",
+      "isNsdReviewRequired": 1,
+      "isArabNation": 1,
+      "isAlternateOfCountryId": null
+    },
+    {
+      "countryId": 203,
+      "regionId": 11,
+      "countryNameEn": "PAKISTAN",
+      "countryNameAr": "باكستان",
+      "countryCode": "PAK",
+      "nationality": "PAKISTAN",
+      "isTourist": 0,
+      "isGcc": 0,
+      "isMaidAllowed": 0,
+      "isEntryAllowed": 0,
+      "isReciprocityAllowed": 0,
+      "isArchived": 0,
+      "countryIso": "PK",
+      "isNsdReviewRequired": 1,
+      "isArabNation": 0,
+      "isAlternateOfCountryId": null
+    }
+  ]
+}

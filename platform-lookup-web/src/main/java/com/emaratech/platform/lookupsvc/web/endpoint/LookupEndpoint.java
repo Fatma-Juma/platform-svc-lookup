@@ -7,27 +7,26 @@ import java.io.OutputStream;
 import java.lang.invoke.MethodHandles;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.ForkJoinPool;
+
+import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.async.DeferredResult;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.emaratech.platform.lookupsvc.api.LookupService;
-import com.emaratech.platform.lookupsvc.model.LookupRequest;
-import com.emaratech.platform.lookupsvc.model.LookupSubRequest;
+import com.emaratech.platform.lookupsvc.model.*;
 import com.emaratech.platform.lookupsvc.util.ConversionHelper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import javax.validation.Valid;
 
 /**
  * Provides the REST APIs for fetching the lookup data.
@@ -66,15 +65,16 @@ public class LookupEndpoint {
      * @throws ResponseStatusException if unable to fetch data
      */
     @GetMapping("/{lookupType}")
-    public ResponseEntity<List<?>> getLookupList(@PathVariable(name = "lookupType", required = true) String lookupType)
+    public ResponseEntity<?> getLookupList(@PathVariable(name = "lookupType", required = true) String lookupType)
         throws ResponseStatusException {
         LOG.info("In get lookup list method.");
         List<?> lookups = lookupService.findAll(lookupType);
-        if (Objects.nonNull(lookups)) {
-            return ResponseEntity.ok(lookups);
+        BaseLookupResponse lookupResponse = new LookupListResponse(lookupType, lookups != null ? lookups : Collections.EMPTY_LIST);
+        if (!CollectionUtils.isEmpty(lookups)) {
+            return ResponseEntity.ok(lookupResponse);
         }
         LOG.warn("No records are found.");
-        return ResponseEntity.ok(Collections.emptyList());
+        return ResponseEntity.ok(lookupResponse);
     }
 
     /**
@@ -93,13 +93,22 @@ public class LookupEndpoint {
 
     }
 
-    @GetMapping("/{lookupType}/{id}")
+    /**
+     *
+     *
+     * @param lookupId
+     * @param lookupType
+     * @return
+     * @throws ResponseStatusException
+     */
+    @GetMapping("/{lookupType}/{lookupId}")
     public ResponseEntity<?> getLookupById(@PathVariable("lookupType") String lookupType,
-                                           @PathVariable("id") Long id)
+                                           @PathVariable("lookupId") Long lookupId)
         throws ResponseStatusException {
-        Object data = lookupService.findById(lookupType, id);
-        if (!Objects.isNull(data)) {
-            return ResponseEntity.ok(data);
+        List<?> singleObjectList = lookupService.findById(lookupType, lookupId);
+        BaseLookupResponse lookupResponse = new LookupResponse(lookupId, lookupType, singleObjectList);
+        if (!CollectionUtils.isEmpty(singleObjectList)) {
+            return ResponseEntity.ok(lookupResponse);
         }
         return ResponseEntity.ok(EMPTY_RESPONSE);
     }

@@ -1,0 +1,24 @@
+{
+  "lookupTye": "Country",
+  "lookupId": 101,
+  "lookupList": [
+    {
+      "countryId": 101,
+      "regionId": 13,
+      "countryNameEn": "United Arab Emirates",
+      "countryNameAr": "الإمارات",
+      "countryCode": "ARE",
+      "nationality": "EMIRATES",
+      "isTourist": 0,
+      "isGcc": 1,
+      "isMaidAllowed": 0,
+      "isEntryAllowed": 0,
+      "isReciprocityAllowed": 0,
+      "isArchived": 0,
+      "countryIso": "AE",
+      "isNsdReviewRequired": 1,
+      "isArabNation": 1,
+      "isAlternateOfCountryId": null
+    }
+  ]
+}

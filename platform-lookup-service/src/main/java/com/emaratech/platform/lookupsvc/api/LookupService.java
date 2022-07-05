@@ -26,7 +26,7 @@ public interface LookupService {
      * @return the String data
      * @throws ResponseStatusException if unable to find by id
      */
-    Object findById(String entityName, Long id) throws ResponseStatusException;
+    List<?> findById(String entityName, Long id) throws ResponseStatusException;
 
     /**
      * Saves the new data to lookup list.

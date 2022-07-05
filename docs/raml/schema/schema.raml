@@ -1,3 +1,43 @@
 #%RAML 1.0 Library
 
 types:
+    LookupRequest:
+      type: object
+      description: The object to hold the lookup request data.
+      properties:
+        lookupType:
+          type: string
+          description:Holds the entityName.
+          required: true
+        lookupData:
+          type: string
+          description:Holds the request payload which is going to save.
+          required: true
+    LookupListResponse:
+      type: object
+      description: The object to hold the lookup response data.
+      properties:
+        lookupType:
+          type: string
+          description:Holds the entityName.
+          required: true
+        lookupList:
+          type: object
+          description: The list of target entity objects.
+          required: true
+    LookupResponse:
+      type: object
+      description: The object to hold the lookup response data.
+      properties:
+        lookupId:
+          type: long
+          description:Holds the id of the entity.
+          required: true
+        lookupType:
+          type: string
+          description:Holds the entityName.
+          required: true
+        lookupList:
+          type: object
+          description: The list of target entity objects.
+          required: true
