@@ -17,19 +17,21 @@ public class ConversionHelper {
         this.modelMapper = modelMapper;
     }
 
+    /**
+     *
+     *
+     * @param filePath
+     * @param entityName
+     * @return
+     * @throws Exception
+     */
     public static List<?> getList(String filePath, String entityName) throws Exception {
         Class clazz = Class.forName("com.emaratech.platform.lookupsvc.model." + entityName);
         List<?> list;
-
         ExcelToObjectMapper mapper = new ExcelToObjectMapper(filePath);
         list = mapper.map(clazz.getNestHost());
-        Method[] methods = ReflectionUtils.getAllDeclaredMethods(clazz);
-        list.sort((o, t1) -> {
-            return -1;
-        });
-
+        list.sort((o, t1) -> -1);
         return list;
-
     }
 
 }

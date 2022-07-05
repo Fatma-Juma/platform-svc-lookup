@@ -5,18 +5,21 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ForkJoinPool;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import com.emaratech.platform.lookupsvc.util.ConversionUtils;
+import com.emaratech.platform.lookupsvc.util.ModelMapperConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.async.DeferredResult;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,7 +35,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * Provides the REST APIs for fetching the lookup data.
  */
 @RestController
-@RequestMapping(value = "${API_VERSION}/lookup", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "${API_VERSION}/lookups", produces = MediaType.APPLICATION_JSON_VALUE)
 public class LookupEndpoint {
 
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -44,17 +47,28 @@ public class LookupEndpoint {
      */
     private final LookupService lookupService;
 
+    /**
+     * Declaring the objectMapper instance.
+     */
     private final ObjectMapper objectMapper;
+
+    /**
+     * Declaring the modelMapperConverter instance.
+     */
+    private final ModelMapperConverter modelMapperConverter;
 
     /**
      * Constructor overloading to inject the lookupService and objectMapper.
      *
      * @param lookupService the lookup service
      * @param objectMapper the objectMapper
+     * @param modelMapperConverter the modelMapperConverter
      */
-    public LookupEndpoint(LookupService lookupService, ObjectMapper objectMapper) {
+    public LookupEndpoint(LookupService lookupService, ObjectMapper objectMapper,
+                          ModelMapperConverter modelMapperConverter) {
         this.lookupService = lookupService;
         this.objectMapper = objectMapper;
+        this.modelMapperConverter = modelMapperConverter;
     }
 
     /**
@@ -70,10 +84,6 @@ public class LookupEndpoint {
         LOG.info("In get lookup list method.");
         List<?> lookups = lookupService.findAll(lookupType);
         BaseLookupResponse lookupResponse = new LookupListResponse(lookupType, lookups != null ? lookups : Collections.EMPTY_LIST);
-        if (!CollectionUtils.isEmpty(lookups)) {
-            return ResponseEntity.ok(lookupResponse);
-        }
-        LOG.warn("No records are found.");
         return ResponseEntity.ok(lookupResponse);
     }
 
@@ -106,23 +116,37 @@ public class LookupEndpoint {
                                            @PathVariable("lookupId") Long lookupId)
         throws ResponseStatusException {
         List<?> singleObjectList = lookupService.findById(lookupType, lookupId);
-        BaseLookupResponse lookupResponse = new LookupResponse(lookupId, lookupType, singleObjectList);
-        if (!CollectionUtils.isEmpty(singleObjectList)) {
-            return ResponseEntity.ok(lookupResponse);
-        }
-        return ResponseEntity.ok(EMPTY_RESPONSE);
+        BaseLookupResponse lookupResponse = new LookupResponse(lookupId, lookupType, singleObjectList != null ? singleObjectList : Collections.EMPTY_LIST);
+        return ResponseEntity.ok(lookupResponse);
     }
 
     /**
-     * Saves the lookup relation.
      *
-     * @param lookupSubRequest the lookupSubRequest
-     * @return the lookup data
+     *
+     * @return
      */
-    @PostMapping("/relation/save")
-    public ResponseEntity<String> saveRelation(@RequestBody LookupSubRequest lookupSubRequest) {
-        return null;
+    @GetMapping("/countries/gcc")
+    public ResponseEntity<?> getGccCountries() {
 
+        List<Country> lookups = (List<Country>) lookupService
+                .findAll("Country").stream()
+                .filter(country -> {
+                    Country newCountryObj = (Country) country;
+                    if (newCountryObj.getIsGcc().intValue() == 1) {
+                        return true;
+                    }
+                    return false;
+                }).collect(Collectors.toList());
+
+        List<LookupSubResponse> lookupSubRes = new ArrayList<>();
+         lookups.forEach(country -> {
+             LookupSubResponse lookupSubResponse = new
+                     LookupSubResponse(country.getCountryId().intValue(),
+                                       country.getCountryNameEn(), country.getCountryNameAr());
+             lookupSubRes.add(lookupSubResponse);
+         });
+
+        return ResponseEntity.ok(lookupSubRes);
     }
 
     /**

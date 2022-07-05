@@ -24,7 +24,7 @@ baseUriParameters:
       example: "8080"
       default: "8080"
 
-/lookup:
+/lookups:
     post:
       description: save the lookup object in the data store.
       body:
@@ -69,7 +69,7 @@ baseUriParameters:
             application/json:
               type: schema.Error
               example: !include data/delete/deleteLookup500Response.json
-/lookup/{lookupType}:
+/lookups/{lookupType}:
   uriParameters:
       lookupType:
         type: string

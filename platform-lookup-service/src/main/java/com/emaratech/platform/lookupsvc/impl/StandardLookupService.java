@@ -195,7 +195,7 @@ public class StandardLookupService implements LookupService {
             Object updatedObject = ConversionUtils.setId(clazz, data, 1L, objectMapper, setterMethodName);
             try {
                 // Converting the updated entity to json.
-                requestedData = objectMapper.writeValueAsString(modelConverter.mapEntityToDTO(updatedObject, clazz));
+                requestedData = objectMapper.writeValueAsString(updatedObject);
             } catch (JsonProcessingException ex) {
                 LOG.error("Error occurred during the json transformation: {}", ex.getMessage());
                 throw new InvalidDataException("Data is not valid.", ex);
