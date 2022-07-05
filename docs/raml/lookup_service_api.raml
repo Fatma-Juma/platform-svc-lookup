@@ -43,7 +43,8 @@ baseUriParameters:
             body:
               application/json:
                 type: schema.Error
-                example: !include data/insert/saveLookup400Response.json
+                example: !include data/insert/saveLookup-data-validation-400Response.json
+                 example: !include data/insert/saveLookup-duplication-400Response.json
         500:
           description: Returns the 500 response code if there is any internal issue.
           body:
@@ -75,28 +76,17 @@ baseUriParameters:
         description: The lookup request identifier value.
         displayName: lookupType
         required: true
-        example: WSHNFYlwyGWPZBIU4PM0TWWD1S5ALO8UN
-  post:
-      description: Change the session's identity.
-      securedBy: [ "oauth_2_0" : { "scopes" : [ "ROLE_SESSION_RESOLVER" ] } ]
-      body:
-        application/json:
-          type: schema.SessionIdentityChangeRequest
-          example: !include data/identity/changeIdentitySessionRequest.json
+        example: Country
+  get:
+      description: Fetches the lookup data.
       responses:
           200:
-            description: Returns the 200 response code if the session's identity is changed successfully.
+            description: Returns the 200 response code
             body:
               application/json:
                 type: schema.SessionIdentityChangeResponse
                 example: !include data/identity/changeIdentitySession200Response.json
-          409:
-              description: Returns the 409 response code if the request is having session update count conflicts.
-              body:
-                application/json:
-                  type: schema.Error
-                  example: !include data/identity/changeIdentitySession409Response.json
-          404:
+          400:
             description: Returns 404 response code if the session corresponding to the session request identifier is not present.
             body:
               application/json:

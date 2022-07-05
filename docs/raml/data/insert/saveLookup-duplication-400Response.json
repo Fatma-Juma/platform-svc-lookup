@@ -1,0 +1,6 @@
+{
+  "status": 400,
+  "timestamp": "2022-07-04T22:59:03",
+  "message": "[ Lookup type can not be empty or null. ]",
+  "error": "Bad Request"
+}
