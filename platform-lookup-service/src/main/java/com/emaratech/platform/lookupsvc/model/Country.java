@@ -38,27 +38,35 @@ public class Country implements Serializable {
     @Size(max = 50, message = "nationality shouldn't be greater than 50 characters.")
     private String nationality;
 
-    @Max(1)
+    @Digits(integer = 1, fraction = 0, message = "isTourist shouldn't be greater than 1.")
     private BigDecimal isTourist;
 
+    @Digits(integer = 1, fraction = 0, message = "isGCC shouldn't be greater than 1.")
     private BigDecimal isGcc;
 
+    @Digits(integer = 1, fraction = 0, message = "isMaidAllowed shouldn't be greater than 1.")
     private BigDecimal isMaidAllowed;
 
+    @Digits(integer = 1, fraction = 0, message = "isEntryAllowed shouldn't be greater than 1.")
     private BigDecimal isEntryAllowed;
 
+    @Digits(integer = 1, fraction = 0, message = "isReciprocityAllowed shouldn't be greater than 1.")
     private BigDecimal isReciprocityAllowed;
 
+    @Digits(integer = 1, fraction = 0, message = "isArchived shouldn't be greater than 1.")
     private BigDecimal isArchived;
 
     @Size(min = 1, message = "countryIso shouldn't be less than 1 character.")
     @Size(max = 22, message = "countryIso shouldn't be greater than 22 characters.")
     private String countryIso;
 
+    @Digits(integer = 1, fraction = 0, message = "isNsdReviewRequired shouldn't be greater than 1.")
     private BigDecimal isNsdReviewRequired;
 
+    @Digits(integer = 1, fraction = 0, message = "isArabNation shouldn't be greater than 1.")
     private BigDecimal isArabNation;
 
+    @Digits(integer = 1, fraction = 0, message = "isAlternateOfCountryId shouldn't be greater than 1.")
     private BigDecimal isAlternateOfCountryId;
 
 }
