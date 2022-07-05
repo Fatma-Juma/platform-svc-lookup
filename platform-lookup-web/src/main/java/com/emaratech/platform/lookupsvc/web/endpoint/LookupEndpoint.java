@@ -13,8 +13,6 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
-import com.emaratech.platform.lookupsvc.util.ConversionUtils;
-import com.emaratech.platform.lookupsvc.util.ModelMapperConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -28,6 +26,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.emaratech.platform.lookupsvc.api.LookupService;
 import com.emaratech.platform.lookupsvc.model.*;
 import com.emaratech.platform.lookupsvc.util.ConversionHelper;
+import com.emaratech.platform.lookupsvc.util.ModelMapperConverter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -65,7 +64,7 @@ public class LookupEndpoint {
      * @param modelMapperConverter the modelMapperConverter
      */
     public LookupEndpoint(LookupService lookupService, ObjectMapper objectMapper,
-                          ModelMapperConverter modelMapperConverter) {
+            ModelMapperConverter modelMapperConverter) {
         this.lookupService = lookupService;
         this.objectMapper = objectMapper;
         this.modelMapperConverter = modelMapperConverter;
@@ -139,12 +138,11 @@ public class LookupEndpoint {
                 }).collect(Collectors.toList());
 
         List<LookupSubResponse> lookupSubRes = new ArrayList<>();
-         lookups.forEach(country -> {
-             LookupSubResponse lookupSubResponse = new
-                     LookupSubResponse(country.getCountryId().intValue(),
-                                       country.getCountryNameEn(), country.getCountryNameAr());
-             lookupSubRes.add(lookupSubResponse);
-         });
+        lookups.forEach(country -> {
+            LookupSubResponse lookupSubResponse = new LookupSubResponse(country.getCountryId().intValue(),
+                                                                        country.getCountryNameEn(), country.getCountryNameAr());
+            lookupSubRes.add(lookupSubResponse);
+        });
 
         return ResponseEntity.ok(lookupSubRes);
     }

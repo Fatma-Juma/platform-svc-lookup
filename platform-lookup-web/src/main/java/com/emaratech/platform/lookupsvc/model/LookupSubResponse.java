@@ -13,7 +13,9 @@ import lombok.Setter;
 public class LookupSubResponse {
 
     private long id;
+
     private String nameEn;
+
     private String nameAr;
 
 }

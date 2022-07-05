@@ -1,10 +1,8 @@
 package com.emaratech.platform.lookupsvc.util;
 
-import java.lang.reflect.Method;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.util.ReflectionUtils;
 
 /**
  * This class provides the conversions methods.
