@@ -6,211 +6,74 @@ uses:
 
 version: v1
 protocols: [ HTTPS ]
-baseUri: https://{host}:{port}/session-service/v1
+baseUri: https://{host}:{port}/lookup-service/v1
 
 documentation:
   - title: Description
-    content: This document contains the API specification for the Williams-Sonoma, Inc. Session Service.
+    content: This document contains the API specification for the Emaratech. Lookup Service.
 
 baseUriParameters:
   host:
     type: string
-    description: The hostname or IP Address to target for the Session Service API.
-    example: "session-service-qa"
-    default: "session-service-qa"
+    description: The hostname or IP Address to target for the Lookup Service API.
+    example: "lookup-service-qa"
+    default: "lookup-service-qa"
   port:
       type: string
       description: The port at which the service is operating. It is optional, typically only for local deployments or non standard service instances.
       example: "8080"
       default: "8080"
 
-securedBy: [oauth_2_0]
-
-securitySchemes:
-  oauth_2_0:
-    description: |
-      Session Service supports OAuth 2.0 for authenticating all API requests.
-    type: OAuth 2.0
-    describedBy:
-      headers:
-        Authorization:
-          description: |
-             Used to send a valid OAuth 2 access token. Do not use with the "access_token" query string parameter.
-          type: string
-      queryParameters:
-        access_token:
-          description: |
-             Used to send a valid OAuth 2 access token. Do not use with the "Authorization" header.
-          type: string
-          example: "cFepP_rFJ5g28ajD1rFHnU78"
-      responses:
-        401:
-          description: |
-              Bad or expired token. This can happen if the access token is expired. To fix, regenerate the access token.
-/session:
+/lookup:
     post:
-      queryParameters:
-        resolveOnly :
-          description: This is used to indicate if the client needs to only resolve the session and never create a new one. Pass the value as true in that case.
-          type: boolean
-          required: false
-          default: false
-        loadSession :
-          description: This is used to indicate if the client needs to load session data. Pass the value as false in case if client doesn't want to load session data.
-          type: boolean
-          required: false
-          default: true
-
-      description: Creates or resolves the session.
-      securedBy: [ "oauth_2_0" : { "scopes" : [ "ROLE_SESSION_RESOLVER" ] } ]
+      description: save the lookup object in the data store.
       body:
         application/json:
-            type: schema.SessionResolveRequest
-            examples:
-              create-with-identity: !include data/resolve/createSessionRequestWithIdentity.json
-              create-without-identity: !include data/resolve/createSessionRequestWithoutIdentity.json
-              resolve-with-sid-psid: !include data/resolve/resolveSessionRequestWithBothSidNPsid.json
-              resolve-with-sid: !include data/resolve/resolveSessionRequestWithSid.json
-              resolve-with-psid: !include data/resolve/resolveSessionRequestWithPsid.json
+          type: schema.saveLookupRequest
+          example: !include data/insert/saveLookupRequest.json
       responses:
         200:
-          description: Returns the 200 response code with session if it is resolved successfully.
-                       Returns the 200 response code with empty body if it is not resolved successfully and resolveOnly flag is true.
+          description: Returns the 200 response code if the lookup is stored successfully.
           body:
             application/json:
-              type: schema.SessionResolveResponse
-              example: !include data/resolve/resolveSession200Response.json
-                       !include data/resolveSession200ResponseWithEmptyBody.json
-        200:
-          description: Returns the 200 response code if the session is created successfully.
-          body:
-            application/json:
-              type: schema.SessionResolveResponse
-              example:
-                create-with-identity: !include data/resolve/createSession200ResponseWithIdentity.json
-                create-without-identity: !include data/resolve/createSession200ResponseWithoutIdentity.json
-        400:
-          description: Returns the 400 response code if the request body is incorrect.
-          body:
-            application/json:
-              type: schema.Error
-              example: !include data/resolve/resolveSession400Response.json
-        500:
-          description: Returns the 500 response code if there is any internal issue.
-          body:
-            application/json:
-              type: schema.Error
-              example: !include data/resolve/resolveSession500Response.json
-/session/{sessionRequestIdentifier}:
-    uriParameters:
-      sessionRequestIdentifier:
-        type: string
-        description: The session request identifier value.
-        displayName: sessionRequestIdentifier
-        required: true
-        example: WSHNFYlwyGWPZBIU4PM0TWWD1S5ALO8UN
-    get:
-      queryParameters:
-        dataKeys:
-          type: string
-          description: The comma-separated set of data keys to be fetched. The data keys can contain "*" asterisk as the last character in which case the preceding string is matched as a prefix. For example "pro*" matches all keys that start with "pro".
-                       Following are the example of possible values of dataKeys:
-                            pro* => matches all keys starting with string "pro".
-                            profile => matches data key "profile".
-                            profile,userBanner => matches data keys "profile" and "userBanner".
-                            pro*,userBanner => matches all keys starting with string "pro" and "userBanner".
-                            * => fetches all the keys.
-          required: false
-      description: Get the session object based on the sid provided. Either sid or psid is required.
-      securedBy: [ "oauth_2_0" : { "scopes" : [ "ROLE_SESSION_CONSUMER", "ROLE_SESSION_RESOLVER" ] } ]
-      responses:
-        200:
-          description: Returns the session details.
-          body:
-            application/json:
-              type: schema.Session
-              example: !include data/get/getSession200Response.json
-        400:
-          description: Returns the 400 response code if the request is incorrect.
-          body:
-            application/json:
-              type: schema.Error
-              example: !include data/get/getSession400Response.json
-        404:
-          description: Returns the 404 response code if the session corresponding to the sid is not present.
-          body:
-            application/json:
-              type: schema.Error
-              example: !include data/get/getSession404Response.json
-        500:
-          description: Returns the 500 response code if the sid is invalid or if there is any other internal issue.
-          body:
-            application/json:
-              type: schema.Error
-              example: !include data/get/getSession500Response.json
-    post:
-      description: Updates the session object in the data store.
-      securedBy: [ "oauth_2_0" : { "scopes" : [ "ROLE_SESSION_CONSUMER", "ROLE_SESSION_RESOLVER" ] } ]
-      body:
-        application/json:
-          type: schema.SessionUpdateRequest
-          example: !include data/update/updateSessionRequest.json
-      responses:
-        200:
-          description: Returns the 200 response code if the session is stored successfully.
-          body:
-            application/json:
-              type: schema.Session
-              example: !include data/update/updateSession200Response.json
+              type: schema.String
+              example: !include data/insert/saveLookup200Response.json
         400:
             description: Returns the 400 response code if the request is incorrect.
             body:
               application/json:
                 type: schema.Error
-                example: !include data/update/updateSession400Response.json
-        404:
-          description: Returns 404 response code if the session corresponding to the sid is not present.
-          body:
-            application/json:
-              type: schema.Error
-              example: !include data/update/updateSession404Response.json
-        409:
-          description: Returns the 409  response code if the session cannot be updated due to updateCount conflicts.
-          body:
-            application/json:
-              type: schema.Error
-                example:
-                    update-session-entry-conflict: !include data/update/updateSession409WithSessionEntryConflictResponse.json
+                example: !include data/insert/saveLookup400Response.json
         500:
           description: Returns the 500 response code if there is any internal issue.
           body:
             application/json:
               type: schema.Error
-              example: !include data/update/updateSession500Response.json
+              example: !include data/insert/saveLookup500Response.json
     delete:
-      description: Updates the session object in the data store.
-      securedBy: [ "oauth_2_0" : { "scopes" : [ "ROLE_SESSION_RESOLVER" ] } ]
+      description: delete the lookup object in the data store.
+
       responses:
         200:
-          description: Returns the 200 response code if the session is deleted successfully.
+          description: Returns the 200 response code if the lookup is deleted successfully.
         400:
           description: Returns the 400 response code if the request is incorrect.
           body:
             application/json:
               type: schema.Error
-              example: !include data/delete/deleteSession400Response.json
+              example: !include data/delete/deleteLookup400Response.json
         500:
           description: Returns the 500 response code if there is any internal issue.
           body:
             application/json:
               type: schema.Error
-              example: !include data/delete/deleteSession500Response.json
-/session/{sessionRequestIdentifier}/identity:
+              example: !include data/delete/deleteLookup500Response.json
+/lookup/{lookupType}:
   uriParameters:
-      sessionRequestIdentifier:
+      lookupType:
         type: string
-        description: The session request identifier value.
-        displayName: sessionRequestIdentifier
+        description: The lookup request identifier value.
+        displayName: lookupType
         required: true
         example: WSHNFYlwyGWPZBIU4PM0TWWD1S5ALO8UN
   post:

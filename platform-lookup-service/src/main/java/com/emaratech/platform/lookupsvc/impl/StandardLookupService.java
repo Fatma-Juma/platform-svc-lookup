@@ -144,7 +144,8 @@ public class StandardLookupService implements LookupService {
      * @param className the className
      * @param data the data
      * @return the list of data
-     * @throws ConstraintViolationException if data is not valid
+     * @throws InvalidDataException if data is not valid
+     * @throws ConstraintViolationException if data have violations
      */
     private String createOrAppendData(String className, String data) throws InvalidDataException,
         ConstraintViolationException {

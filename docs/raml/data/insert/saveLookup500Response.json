@@ -1,0 +1,6 @@
+{
+  "status": 500,
+  "timestamp": "2021-05-04T14:56:47",
+  "message": "Exception occurred during saving the lookup data.",
+  "error": "Internal Server Error"
+}

@@ -27,6 +27,8 @@ import com.emaratech.platform.lookupsvc.util.ConversionHelper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import javax.validation.Valid;
+
 /**
  * Provides the REST APIs for fetching the lookup data.
  */
@@ -64,7 +66,7 @@ public class LookupEndpoint {
      * @throws ResponseStatusException if unable to fetch data
      */
     @GetMapping("/{lookupType}")
-    public ResponseEntity<List<?>> getLookupList(@PathVariable(name = "lookupType") String lookupType)
+    public ResponseEntity<List<?>> getLookupList(@PathVariable(name = "lookupType", required = true) String lookupType)
         throws ResponseStatusException {
         LOG.info("In get lookup list method.");
         List<?> lookups = lookupService.findAll(lookupType);
@@ -83,16 +85,10 @@ public class LookupEndpoint {
      * @throws ResponseStatusException if not able to save
      */
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody LookupRequest lookupRequest)
+    public ResponseEntity<?> save(@RequestBody @Valid LookupRequest lookupRequest)
         throws ResponseStatusException {
 
-        if (Objects.isNull(lookupRequest.getLookupType())) {
-            LOG.error("Lookup Type is empty in lookup request");
-            return new ResponseEntity<>("LookupType shouldn't be empty: [" + lookupRequest.getLookupType() + "]",
-                                        HttpStatus.BAD_REQUEST);
-        }
-
-        lookupService.save(lookupRequest.getLookupType(), lookupRequest.getJsonString());
+        lookupService.save(lookupRequest.getLookupType(), lookupRequest.getLookupData());
         return new ResponseEntity<>("Saved successfully", HttpStatus.OK);
 
     }
@@ -145,7 +141,7 @@ public class LookupEndpoint {
             tempFile.deleteOnExit();
             output.setResult(ResponseEntity.ok("Saving data job initiated.."));
         } catch (Exception ex) {
-            LOG.error("Request processing interrupted ", ex);
+            LOG.error("Exception occurred during saving the lookup data.", ex);
             output.setErrorResult(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("INTERNAL_SERVER_ERROR occurred."));
         }
 
