@@ -84,17 +84,17 @@ baseUriParameters:
             description: Returns the 200 response code
             body:
               application/json:
-                type: schema.SessionIdentityChangeResponse
-                example: !include data/identity/changeIdentitySession200Response.json
-          400:
-            description: Returns 404 response code if the session corresponding to the session request identifier is not present.
+                type: schema.LookupResponse
+                example: !include data/get/getLookup200Response.json
+          404:
+            description: Returns 404 response code if the lookup corresponding to the lookup data is not present.
             body:
               application/json:
                 type: schema.Error
-                example: !include data/identity/changeIdentitySession404Response.json
+                example: !include data/get/getLookup404Response.json
           500:
             description: Returns the 500 response code if there is any internal issue.
             body:
               application/json:
                 type: schema.Error
-                example: !include data/identity/changeIdentitySession500Response.json
+                example: !include data/get/getLookup500Response.json
