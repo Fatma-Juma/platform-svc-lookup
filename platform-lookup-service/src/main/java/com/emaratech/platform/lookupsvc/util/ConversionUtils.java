@@ -70,7 +70,7 @@ public class ConversionUtils {
      * @return <T> the target object
      */
     public static <T> T setId(Object clazz, String data, Long newIdValue, ObjectMapper objectMapper, String setterMethodName) {
-        
+
         try {
             clazz = objectMapper.readValue(data, Class.forName(((Class) clazz).getName()));
             Method method = clazz.getClass().getDeclaredMethod(setterMethodName, BigDecimal.class);

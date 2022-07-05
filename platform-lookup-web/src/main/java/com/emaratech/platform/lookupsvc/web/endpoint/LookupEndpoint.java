@@ -47,7 +47,7 @@ public class LookupEndpoint {
     private final ObjectMapper objectMapper;
 
     /**
-     * Constructor overloading to inject the lookupService.
+     * Constructor overloading to inject the lookupService and objectMapper.
      *
      * @param lookupService the lookup service
      * @param objectMapper the objectMapper
@@ -62,7 +62,7 @@ public class LookupEndpoint {
      *
      * @param lookupType the lookupType
      * @return the countries as json.
-     * @throws ResponseStatusException if unable to fetch data
+     * @throws ResponseStatusException if unable to fetch the data
      */
     @GetMapping("/{lookupType}")
     public ResponseEntity<?> getLookupList(@PathVariable(name = "lookupType", required = true) String lookupType)
@@ -82,7 +82,7 @@ public class LookupEndpoint {
      *
      * @param lookupRequest the lookupRequest
      * @return the lookup data
-     * @throws ResponseStatusException if not able to save
+     * @throws ResponseStatusException if unable to save
      */
     @PostMapping
     public ResponseEntity<?> save(@RequestBody @Valid LookupRequest lookupRequest)
@@ -94,12 +94,12 @@ public class LookupEndpoint {
     }
 
     /**
+     * Gets the lookup data by Id.
      *
-     *
-     * @param lookupId
-     * @param lookupType
-     * @return
-     * @throws ResponseStatusException
+     * @param lookupId the lookupId
+     * @param lookupType the lookupType
+     * @return single list of object
+     * @throws ResponseStatusException if unable to fetch the data
      */
     @GetMapping("/{lookupType}/{lookupId}")
     public ResponseEntity<?> getLookupById(@PathVariable("lookupType") String lookupType,
