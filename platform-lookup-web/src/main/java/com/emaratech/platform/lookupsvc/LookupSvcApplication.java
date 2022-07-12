@@ -1,5 +1,6 @@
 package com.emaratech.platform.lookupsvc;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -20,9 +21,9 @@ public class LookupSvcApplication {
     }
 
     /**
+     * Creates the objectMapper managed bean with custom configurations.
      *
-     *
-     * @return
+     * @return objectMapper
      */
     @Bean
     public ObjectMapper objectMapper() {
@@ -34,6 +35,18 @@ public class LookupSvcApplication {
         mapper.registerModule(new JavaTimeModule());
 
         return mapper;
+    }
+
+    /**
+     * Creates the modelMapper managed bean with custom configurations.
+     *
+     * @return modelMapper
+     */
+    @Bean
+    public ModelMapper modelMapper() {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setFieldMatchingEnabled(false);
+        return modelMapper;
     }
 
 }

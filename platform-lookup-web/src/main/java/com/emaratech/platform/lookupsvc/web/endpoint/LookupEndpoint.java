@@ -5,7 +5,6 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.invoke.MethodHandles;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ForkJoinPool;
@@ -26,7 +25,6 @@ import org.springframework.web.server.ResponseStatusException;
 import com.emaratech.platform.lookupsvc.api.LookupService;
 import com.emaratech.platform.lookupsvc.model.*;
 import com.emaratech.platform.lookupsvc.util.ConversionHelper;
-import com.emaratech.platform.lookupsvc.util.ModelMapperConverter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -52,22 +50,33 @@ public class LookupEndpoint {
     private final ObjectMapper objectMapper;
 
     /**
-     * Declaring the modelMapperConverter instance.
+     * Declaring the conversionHelper instance.
      */
-    private final ModelMapperConverter modelMapperConverter;
+    private final ConversionHelper conversionHelper;
 
     /**
-     * Constructor overloading to inject the lookupService and objectMapper.
+     * Constructor overloading to inject the lookupService, objectMapper and
+     * conversionHelper.
      *
      * @param lookupService the lookup service
      * @param objectMapper the objectMapper
-     * @param modelMapperConverter the modelMapperConverter
+     * @param conversionHelper the conversionHelper
      */
     public LookupEndpoint(LookupService lookupService, ObjectMapper objectMapper,
-            ModelMapperConverter modelMapperConverter) {
+            ConversionHelper conversionHelper) {
         this.lookupService = lookupService;
         this.objectMapper = objectMapper;
-        this.modelMapperConverter = modelMapperConverter;
+        this.conversionHelper = conversionHelper;
+    }
+
+    @GetMapping("/complete/{lookupType}")
+    public ResponseEntity<?> getLookupsWithFullDetails(@PathVariable("lookupType") String lookupType) {
+
+        LOG.info("In get lookup list method.");
+        List<?> lookups = lookupService.findAll(lookupType);
+        BaseLookupResponse lookupResponse = new LookupListResponse(lookupType, lookups != null ? lookups : Collections.EMPTY_LIST);
+        return ResponseEntity.ok(lookupResponse);
+
     }
 
     /**
@@ -78,12 +87,12 @@ public class LookupEndpoint {
      * @throws ResponseStatusException if unable to fetch the data
      */
     @GetMapping("/{lookupType}")
-    public ResponseEntity<?> getLookupList(@PathVariable(name = "lookupType", required = true) String lookupType)
+    public ResponseEntity<?> getLookupList(@PathVariable(name = "lookupType") String lookupType)
         throws ResponseStatusException {
         LOG.info("In get lookup list method.");
         List<?> lookups = lookupService.findAll(lookupType);
-        BaseLookupResponse lookupResponse = new LookupListResponse(lookupType, lookups != null ? lookups : Collections.EMPTY_LIST);
-        return ResponseEntity.ok(lookupResponse);
+        return ResponseEntity.ok(lookups != null ? conversionHelper
+                .buildPartialLookupResponse(lookups, lookupType) : Collections.EMPTY_LIST);
     }
 
     /**
@@ -111,21 +120,23 @@ public class LookupEndpoint {
      * @throws ResponseStatusException if unable to fetch the data
      */
     @GetMapping("/{lookupType}/{lookupId}")
-    public ResponseEntity<?> getLookupById(@PathVariable("lookupType") String lookupType,
-                                           @PathVariable("lookupId") Long lookupId)
+    public ResponseEntity<?> getLookupByLookupTypeAndLookupId(@PathVariable("lookupType") String lookupType,
+                                                              @PathVariable("lookupId") Long lookupId)
         throws ResponseStatusException {
         List<?> singleObjectList = lookupService.findById(lookupType, lookupId);
-        BaseLookupResponse lookupResponse = new LookupResponse(lookupId, lookupType, singleObjectList != null ? singleObjectList : Collections.EMPTY_LIST);
-        return ResponseEntity.ok(lookupResponse);
+        return ResponseEntity.ok(singleObjectList != null
+                ? conversionHelper.buildPartialLookupResponse(singleObjectList, lookupType)
+                : Collections.EMPTY_LIST);
     }
 
     /**
      * Gets the gcc countries.
      *
-     * @return list of gcc countrirs
+     * @return list of gcc countries
+     * @throws ResponseStatusException if unable to fetch the data
      */
     @GetMapping("/countries/gcc")
-    public ResponseEntity<?> getGccCountries() {
+    public ResponseEntity<?> getGccCountries() throws ResponseStatusException {
 
         List<Country> lookups = (List<Country>) lookupService
                 .findAll("Country").stream()
@@ -137,14 +148,94 @@ public class LookupEndpoint {
                     return false;
                 }).collect(Collectors.toList());
 
-        List<LookupSubResponse> lookupSubRes = new ArrayList<>();
-        lookups.forEach(country -> {
-            LookupSubResponse lookupSubResponse = new LookupSubResponse(country.getCountryId().intValue(),
-                                                                        country.getCountryNameEn(), country.getCountryNameAr());
-            lookupSubRes.add(lookupSubResponse);
-        });
+        return ResponseEntity.ok(conversionHelper
+                .buildPartialLookupResponse(lookups, "Country"));
+    }
 
-        return ResponseEntity.ok(lookupSubRes);
+    /**
+     * Gets the arab nation list.
+     *
+     * @return list of arab nation
+     * @throws ResponseStatusException if unable to fetch the data
+     */
+    @GetMapping("/countries/arab")
+    public ResponseEntity<?> getArabCountries() throws ResponseStatusException {
+
+        List<Country> lookups = (List<Country>) lookupService
+                .findAll("Country").stream()
+                .filter(country -> {
+                    Country newCountryObj = (Country) country;
+                    if (newCountryObj.getIsArabNation().intValue() == 1) {
+                        return true;
+                    }
+                    return false;
+                }).collect(Collectors.toList());
+
+        return ResponseEntity.ok(conversionHelper
+                .buildPartialLookupResponse(lookups, "Country"));
+    }
+
+    /**
+     * Gets the lookup data by lookupType and code.
+     *
+     * @param lookupType the lookupType
+     * @param code the code
+     * @return list of objects
+     * @throws ResponseStatusException if unable to fetch the data
+     */
+    @GetMapping("/lc/{lookupType}/{code}")
+    public ResponseEntity<?> getLookupByLTypeAndCode(@PathVariable(value = "lookupType") String lookupType,
+                                                     @PathVariable(value = "code") String code)
+        throws ResponseStatusException {
+
+        List<?> lookups = lookupService.findAll(lookupType);
+        return ResponseEntity.ok(lookups != null ? conversionHelper
+                .buildResponseByCode(lookups, lookupType, code) : Collections.EMPTY_LIST);
+    }
+
+    /**
+     * Gets the city lookup data by emirate id.
+     *
+     * @param emirateId the emirateId
+     * @return list of objects
+     * @throws ResponseStatusException if unable to fetch the data
+     */
+    @GetMapping("/city/{emirateId}")
+    public ResponseEntity<?> getCityByEmiratesId(@PathVariable("emirateId") Long emirateId) throws ResponseStatusException {
+        List<City> lookups = (List<City>) lookupService.findAll("City")
+                .stream().filter(obj -> {
+                    City city = (City) obj;
+                    if (city.getEmirateId().longValue() == emirateId) {
+                        return true;
+                    }
+                    return false;
+                }).collect(Collectors.toList());
+
+        return ResponseEntity.ok(lookups != null ? conversionHelper
+                .buildPartialLookupResponse(lookups, "City") : Collections.EMPTY_LIST);
+    }
+
+    /**
+     * Gets the area lookup data by city id.
+     *
+     * @param cityId the cityId
+     * @return list of objects
+     * @throws ResponseStatusException if unable to fetch the data
+     */
+    @GetMapping("/area/{cityId}")
+    public ResponseEntity<?> getAreaByCity(@PathVariable("cityId") Long cityId) throws ResponseStatusException {
+
+        List<Area> lookups = (List<Area>) lookupService.findAll("Area")
+                .stream().filter(obj -> {
+                    Area area = (Area) obj;
+                    if (area.getCityId() != null && area.getCityId().longValue() == cityId) {
+                        return true;
+                    }
+                    return false;
+                }).collect(Collectors.toList());
+
+        return ResponseEntity.ok(lookups != null ? conversionHelper
+                .buildPartialLookupResponse(lookups, "Area") : Collections.EMPTY_LIST);
     }
 
     /**
@@ -168,7 +259,7 @@ public class LookupEndpoint {
             inputStream.transferTo(outputStream);
             inputStream.close();
             outputStream.close();
-            csvData = ConversionHelper.getList(tempFile.getPath(), lookupType);
+            csvData = ConversionHelper.getMapSortedList(tempFile.getPath(), lookupType);
             tempFile.deleteOnExit();
             output.setResult(ResponseEntity.ok("Saving data job initiated.."));
         } catch (Exception ex) {
@@ -191,4 +282,5 @@ public class LookupEndpoint {
 
         return output;
     }
+
 }

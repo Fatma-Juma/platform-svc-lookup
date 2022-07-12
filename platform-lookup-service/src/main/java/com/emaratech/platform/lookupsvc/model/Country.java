@@ -6,16 +6,21 @@ import java.math.BigDecimal;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@RequiredArgsConstructor
 /**
  * Country Class for holding the country data.
  */
 public class Country implements Serializable {
 
+    @JsonProperty(value = "id")
     private BigDecimal countryId;
 
     @Digits(integer = 2, fraction = 0, message = "Region shouldn't be greater than 2 digits.")
@@ -23,10 +28,12 @@ public class Country implements Serializable {
 
     @Size(min = 1, message = "Country Name shouldn't less than 1 character.")
     @Size(max = 100, message = "Country Name shouldn't be greater than 100 characters.")
+    @JsonProperty(value = "nameEn")
     private String countryNameEn;
 
     @Size(min = 1, message = "Country Name shouldn't less than 1 character.")
     @Size(max = 100, message = "Country Name shouldn't be greater than 100 characters.")
+    @JsonProperty(value = "nameAr")
     private String countryNameAr;
 
     @Size(min = 3, message = "Country Code shouldn't be less than 3 characters.")
@@ -67,5 +74,4 @@ public class Country implements Serializable {
 
     @Digits(integer = 1, fraction = 0, message = "isAlternateOfCountryId shouldn't be greater than 1.")
     private BigDecimal isAlternateOfCountryId;
-
 }
