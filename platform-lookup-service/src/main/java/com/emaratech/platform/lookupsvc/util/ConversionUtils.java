@@ -46,7 +46,7 @@ public class ConversionUtils {
      * @param json the json
      * @param elementClass the elementClass
      * @param objectMapper the objectMapper
-     * @param <T> the <T>
+     * @param <T> the elementClass
      * @return List of target entity
      * @throws IOException if data parsing is failed
      */
@@ -67,7 +67,7 @@ public class ConversionUtils {
      * @param <T> the T
      * @param objectMapper the objectMapper
      * @param setterMethodName the setterMethodName
-     * @return <T> the target object
+     * @return the target object
      */
     public static <T> T setId(Object clazz, String data, Long newIdValue, ObjectMapper objectMapper, String setterMethodName) {
 

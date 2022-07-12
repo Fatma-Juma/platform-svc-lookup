@@ -120,9 +120,9 @@ public class LookupEndpoint {
     }
 
     /**
+     * Gets the gcc countries.
      *
-     *
-     * @return
+     * @return list of gcc countrirs
      */
     @GetMapping("/countries/gcc")
     public ResponseEntity<?> getGccCountries() {

@@ -16,7 +16,7 @@ public class LookupMetaData {
     private Map<String, String> classMetaDataMap;
 
     /**
-     *
+     * Constructs the map for class getter and setter.
      */
     @PostConstruct
     private void init() {

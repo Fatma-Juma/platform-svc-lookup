@@ -88,11 +88,7 @@ public class StandardLookupService implements LookupService {
                 listData = listData.stream()
                         .filter(obj -> {
                             BigDecimal targetId = (BigDecimal) ConversionUtils.getMethodValueByReflection(getterMethodName, obj);
-                            if (targetId.longValue() == id) {
-                                return true;
-                            } else {
-                                return false;
-                            }
+                            return targetId.longValue() == id;
 
                         }).collect(Collectors.toList());
 

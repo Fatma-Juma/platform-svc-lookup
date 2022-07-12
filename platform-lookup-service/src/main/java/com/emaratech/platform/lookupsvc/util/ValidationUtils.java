@@ -8,14 +8,17 @@ import javax.validation.Validator;
 
 import org.springframework.stereotype.Component;
 
+/**
+ * Validates the violation of class fields data.
+ */
 @Component
 public class ValidationUtils {
 
     /**
-     *
+     * validates the class fields data.
      *
      * @param targetClass
-     * @return
+     * @return set of violations
      */
     public static Set<?> validate(Object targetClass) {
 

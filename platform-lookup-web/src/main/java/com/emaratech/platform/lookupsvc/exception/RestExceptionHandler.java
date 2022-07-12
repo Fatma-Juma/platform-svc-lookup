@@ -89,7 +89,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     /**
-     * Access denied exception handler
+     * Access denied exception handler.
      *
      * @param ex the Access Denied Exception
      * @return the response object contains ApiError class
