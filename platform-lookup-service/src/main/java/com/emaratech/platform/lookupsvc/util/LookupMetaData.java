@@ -24,6 +24,18 @@ public class LookupMetaData {
         classMetaDataMap.put("Country-Id-Setter", "setCountryId");
         classMetaDataMap.put("Country-Id-Getter", "getCountryId");
         classMetaDataMap.put("Country-Dup-Field", "getCountryCode");
+
+        classMetaDataMap.put("Emirate-Id-Setter", "setEmirateId");
+        classMetaDataMap.put("Emirate-Id-Getter", "getEmirateId");
+        classMetaDataMap.put("Emirate-Dup-Field", "getCode");
+
+        classMetaDataMap.put("Area-Id-Setter", "setAreaId");
+        classMetaDataMap.put("Area-Id-Getter", "getAreaId");
+        classMetaDataMap.put("Area-Dup-Field", "getAreaEn");
+
+        classMetaDataMap.put("City-Id-Setter", "setCityId");
+        classMetaDataMap.put("City-Id-Getter", "getCityId");
+        classMetaDataMap.put("City-Dup-Field", "getCityNameEn");
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.emaratech.platform.lookupsvc.model;
 
+import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,8 +25,9 @@ public class Area implements Serializable {
     @Size(max = 50, message = "Area Name shouldn't be greater than 50 characters.")
     private String areaEn;
 
-    @Digits(integer = 5, fraction = 0, message = "CityId should be between 1 and 5 characters")
+    @Digits(integer = 5, fraction = 0, message = "City Id shouldn't be greater than 5 digits.")
     private BigDecimal cityId;
+
 
     @Digits(integer = 1, fraction = 0, message = "isArchived shouldn't be greater than 1.")
     private BigDecimal isArchived;

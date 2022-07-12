@@ -25,7 +25,7 @@ public class Emirate implements Serializable {
     @Size(max = 20, message = "Emirate Name shouldn't be greater than 20 characters.")
     private String emirateNameAr;
 
-    @Size(min = 1, message = "Code shouldn't be less than 1 characters.")
+    @Size(min = 1, message = "Code shouldn't be less than 1 character.")
     @Size(max = 20, message = "Code shouldn't be greater than 20 characters.")
     private String code;
 
