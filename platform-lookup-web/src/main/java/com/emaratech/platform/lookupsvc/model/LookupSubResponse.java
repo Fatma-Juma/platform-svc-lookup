@@ -2,13 +2,15 @@ package com.emaratech.platform.lookupsvc.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 /**
- *
+ * Holds the lookup response.
  */
 public class LookupSubResponse {
 
@@ -18,4 +20,12 @@ public class LookupSubResponse {
 
     private String nameAr;
 
+    /**
+     * Copy constructor for setting up the values.
+     *
+     * @param id the id
+     */
+    public LookupSubResponse(Long id) {
+        this.id = id;
+    }
 }

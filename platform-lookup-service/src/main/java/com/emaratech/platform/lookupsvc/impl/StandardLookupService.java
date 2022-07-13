@@ -73,6 +73,7 @@ public class StandardLookupService implements LookupService {
         try {
             listData = ConversionUtils.jsonArrayToList(lookupStoreRepository.findAll(entityName), clazz, objectMapper);
         } catch (IOException ex) {
+            LOG.error("Exception occurred {} :", ex);
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), ex);
         }
         return listData;

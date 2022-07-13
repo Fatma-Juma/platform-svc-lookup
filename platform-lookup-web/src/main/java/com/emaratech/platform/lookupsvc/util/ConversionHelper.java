@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
+import com.emaratech.platform.lookupsvc.model.Country;
+import com.emaratech.platform.lookupsvc.model.LookupDTO;
 import com.emaratech.platform.lookupsvc.model.LookupSubResponse;
 
 /**
@@ -49,7 +51,7 @@ public class ConversionHelper {
      * @param entityName the entityName
      * @return list of objects
      */
-    public List<LookupSubResponse> buildPartialLookupResponse(List<?> sourceList, String entityName) {
+    public List<LookupDTO> buildPartialLookupResponse(List<?> sourceList, String entityName) {
 
         return sourceList.stream().map(obj -> {
             String getterMethodName = lookupMetaData.getIdGetterForEntity(entityName);
@@ -59,9 +61,23 @@ public class ConversionHelper {
                     .getMethodValueByReflection("get" + entityName + "NameEn", obj);
             String nameAr = (String) ConversionUtils
                     .getMethodValueByReflection("get" + entityName + "NameAr", obj);
-            LookupSubResponse lookupSubResponse = new LookupSubResponse(id, nameEn, nameAr);
-            return lookupSubResponse;
+
+            return new LookupDTO(id, nameEn, nameAr);
         }).collect(Collectors.toList());
+    }
+
+    /**
+     * Builds the partial lookup response.
+     *
+     * @param sourceList the sourceList
+     * @return list of objects
+     */
+    public List<LookupSubResponse> buildPartialLookupResponse(List<Country> sourceList) {
+
+        return sourceList.stream().map(country -> new LookupDTO(country.getCountryId().longValue(),
+                                                                country.getCountryNameEn(), country.getCountryNameAr(), country.getCountryCode()))
+                .collect(Collectors.toList());
+
     }
 
     /**
@@ -71,16 +87,13 @@ public class ConversionHelper {
      * @param entityName the entityName
      * @return list of object
      */
-    public List<LookupSubResponse> buildResponseByCode(List<?> sourceList,
-                                                       String entityName, String code) {
+    public List<?> buildResponseByCode(List<?> sourceList,
+                                       String entityName, String code) {
 
         return buildPartialLookupResponse(sourceList.stream().filter(obj -> {
             String getterMethodForCode = lookupMetaData.getMethodNameForDuplicationForEntity(entityName);
             String val = (String) ConversionUtils.getMethodValueByReflection(getterMethodForCode, obj);
-            if (val.equalsIgnoreCase(code.toUpperCase())) {
-                return true;
-            }
-            return false;
+            return val.equalsIgnoreCase(code.toUpperCase());
         }).collect(Collectors.toList()), entityName);
     }
 }

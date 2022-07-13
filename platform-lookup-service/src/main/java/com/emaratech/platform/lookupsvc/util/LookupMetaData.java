@@ -36,6 +36,10 @@ public class LookupMetaData {
         classMetaDataMap.put("City-Id-Setter", "setCityId");
         classMetaDataMap.put("City-Id-Getter", "getCityId");
         classMetaDataMap.put("City-Dup-Field", "getCityNameEn");
+
+        classMetaDataMap.put("Faith-Id-Setter", "setFaithId");
+        classMetaDataMap.put("Faith-Id-Getter", "getFaithId");
+        classMetaDataMap.put("Faith-Dup-Field", "getFaithNameEn");
     }
 
     /**

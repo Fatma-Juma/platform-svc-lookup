@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- *
+ * Holds the request.
  */
 @Getter
 @Setter
