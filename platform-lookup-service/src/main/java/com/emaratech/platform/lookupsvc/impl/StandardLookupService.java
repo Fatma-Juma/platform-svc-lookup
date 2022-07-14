@@ -77,7 +77,7 @@ public class StandardLookupService implements LookupService {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), ex);
         }
         if (CollectionUtils.isEmpty(listData)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No data is found against:  "+ entityName);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No data is found against:  " + entityName);
         }
         return listData;
     }

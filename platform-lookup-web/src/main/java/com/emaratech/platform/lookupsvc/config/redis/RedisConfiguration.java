@@ -1,7 +1,5 @@
 package com.emaratech.platform.lookupsvc.config.redis;
 
-import io.lettuce.core.ClientOptions;
-import io.lettuce.core.resource.ClientResources;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
@@ -10,14 +8,15 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.redis.connection.RedisNode;
 import org.springframework.data.redis.connection.RedisSentinelConfiguration;
-import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
-import org.springframework.data.redis.connection.lettuce.LettuceClientConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettucePoolingClientConfiguration;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericToStringSerializer;
 import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+
+import io.lettuce.core.ClientOptions;
+import io.lettuce.core.resource.ClientResources;
 
 /**
  * These are the redis configuration for icm cache.
@@ -30,7 +29,6 @@ public class RedisConfiguration {
 
     @Value("#{new Boolean('${redis.standalone.enabled:false}')}")
     private boolean isRedisStandAloneEnabled;
-
 
     /**
      * Copy constructor.
@@ -77,7 +75,7 @@ public class RedisConfiguration {
     }
 
     @Bean
-    LettucePoolingClientConfiguration lettucePoolConfig(ClientOptions options, ClientResources dcr){
+    LettucePoolingClientConfiguration lettucePoolConfig(ClientOptions options, ClientResources dcr) {
         return LettucePoolingClientConfiguration.builder()
                 .poolConfig(new GenericObjectPoolConfig())
                 .clientOptions(options)
@@ -86,7 +84,7 @@ public class RedisConfiguration {
     }
 
     @Bean
-    public ClientOptions clientOptions(){
+    public ClientOptions clientOptions() {
         return ClientOptions.builder()
                 .disconnectedBehavior(ClientOptions.DisconnectedBehavior.REJECT_COMMANDS)
                 .autoReconnect(true)
