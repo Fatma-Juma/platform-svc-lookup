@@ -35,9 +35,8 @@ pipeline {
         //sonarExclusions             = ''
 
         //Environment Related
-        //mailTo                      = 'vision.core@emaratech.ae,devops.scm@emaratech.ae'
-        mailTo                      = 'devops.scm@emaratech.ae'
-
+        mailTo                      = 'vision.core@emaratech.ae,devops.scm@emaratech.ae'
+        
         //System Provided
         deploymentRepoName          = 'platform-svc-lookup'
         deploymentRepoAddress       = 'emt-devops-projects/platform-svc-lookup-devops.git'
@@ -59,11 +58,10 @@ pipeline {
                     echo "branchName:${branchName}, tagName:${tagName}"
                     utils.abortPreviousRunningBuilds()
                     (branchToCheckout, tagName, quitPipeline)   = utils.getDeploymentEnv(branchName, tagName)
-                    //(releaseTicket, releaseVersion)             = git.getCommitMessage()
+                    (releaseTicket, releaseVersion)             = git.getCommitMessage()
 
-                    releaseTicket = "TDVOP-59924"   // This is only for testing purpose until devlopment is under testing 
                     jiraIssueStatus                             = jira.getIssueStatusFromKey(releaseTicket)
-                    //checkApprover                               = check.deploymentCondition(branchToCheckout, jiraIssueStatus, tagName, true, releaseTicket, tagName, funtionalArea)
+                    checkApprover                               = check.deploymentCondition(branchToCheckout, jiraIssueStatus, tagName, true, releaseTicket, tagName, funtionalArea)
     
                     def strArray        = tagName.split('-')
                     versionNo           = strArray[strArray.size() - 2]
@@ -75,7 +73,7 @@ pipeline {
                     nexusLinkDb         = nexus.getNexusUrl('2') + "${nexusRepo}/ae/emaratech/vision-microservices/${nexusArtifactId}/${nexusVersion}/${nexusArtifactId}-${nexusVersion}.${nexusArtifactTypeDB}"
 
                     // This is only for testing purpose until devlopment is under testing 
-                    checkApprover = true
+                    //checkApprover = true
                     quitPipeline  = false
                     
 //                    echo "branchToCheckout:${branchToCheckout}, tagName:${tagName}, quitPipeline:${quitPipeline}, funtionalArea:${funtionalArea}"
@@ -91,11 +89,10 @@ pipeline {
             }
             steps {
                 script{
-                    buildCode.maven(WORKSPACE, 'clean install -U')
-                    //configFileProvider([configFile(fileId: '31ca9b93-9849-484b-bd42-ecd5b2cb54f1', variable: 'MAVEN_SETTINGS')]) {
-                    //sh 'mvn clean install -s $MAVEN_SETTINGS'
-                    //                    //31ca9b93-9849-484b-bd42-ecd5b2cb54f1
-                    //}
+                    configFileProvider([configFile(fileId: '45930d83-a734-4155-a8ab-2c2523b14faf', variable: 'MAVEN_SETTINGS')]) {
+                        buildCode.maven(WORKSPACE, 'clean install -U')
+                        //sh 'mvn clean install -s $MAVEN_SETTINGS'
+                    }
 
                     sh 'ls'
 
@@ -116,12 +113,12 @@ pipeline {
                         }
                     }
 
-
-                    //jira.setReleaseTicketFields(releaseTicket, 'Nexus', nexusLinkMain)
+                    jira.setReleaseTicketFields(releaseTicket, 'Nexus', nexusLinkMain)
                 }
             }
         }
 
+/*
         stage('Trigger Deployment Pipeline') {
             when {
                 expression { quitPipeline == false && checkApprover == true }
@@ -133,6 +130,8 @@ pipeline {
                 }
             }
         }
+
+*/
 
 /*
         stage('Static Code Analysis') {
