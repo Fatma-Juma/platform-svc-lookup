@@ -40,6 +40,9 @@ public class LookupMetaData {
         classMetaDataMap.put("Faith-Id-Setter", "setFaithId");
         classMetaDataMap.put("Faith-Id-Getter", "getFaithId");
         classMetaDataMap.put("Faith-Dup-Field", "getFaithNameEn");
+
+        classMetaDataMap.put("VisaType-Id-Setter", "setVisaTypeId");
+        classMetaDataMap.put("VisaType-Id-Getter", "getVisaTypeId");
     }
 
     /**
