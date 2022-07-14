@@ -16,8 +16,8 @@ pipeline {
         //User Provided
         //Build & Nexus Related
         nexusGroupId                = 'ae.emaratech.vision-microservices'
-        buildDirectoryAPI           = './blacklistsrv-web/target/'
-        buildFileAPI                = '	blacklistsrv-web-0.0.1-SNAPSHOT.jar'
+        buildDirectoryAPI           = './platform-svc-lookup/target/'
+        buildFileAPI                = '	platform-svc-lookup-0.0.1-SNAPSHOT.jar'
         nexusArtifactTypeAPI        = 'jar'
         nexusArtifactId             = 'platform-svc-lookup'
         nexusVersion                = ''
