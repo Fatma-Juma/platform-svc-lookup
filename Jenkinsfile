@@ -83,6 +83,7 @@ pipeline {
                 }
             }
         }
+
         stage('Build App') {
             when {
                 expression { (quitPipeline == false && checkApprover == true) && tagName.contains('service') }
@@ -124,16 +125,13 @@ pipeline {
                 expression { quitPipeline == false && checkApprover == true }
             }
             steps {
-                script {
-                    
+                script {                    
                      git.commitToAnotherRepo(deploymentRepoAddress, deploymentRepoName, branchToCheckout, tagName, releaseVersion, releaseTicket, nexusLinkMain, nexusLinkApp, nexusLinkDb)
                 }
             }
         }
-
 */
 
-/*
         stage('Static Code Analysis') {
             when {
                 expression { quitPipeline == false && checkApprover == true }
@@ -144,8 +142,6 @@ pipeline {
                 }
             }
         }
-
-*/
 
 
     }
