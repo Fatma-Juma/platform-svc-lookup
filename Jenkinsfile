@@ -59,12 +59,11 @@ pipeline {
                     echo "branchName:${branchName}, tagName:${tagName}"
                     utils.abortPreviousRunningBuilds()
                     (branchToCheckout, tagName, quitPipeline)   = utils.getDeploymentEnv(branchName, tagName)
-                    (releaseTicket, releaseVersion)             = git.getCommitMessage()
+                    //(releaseTicket, releaseVersion)             = git.getCommitMessage()
 
-                //    branchToCheckout = "QMG-svc"  // This is only for testing purpose until devlopment is under testing 
-                //    releaseTicket = "TDVOP-59924"   // This is only for testing purpose until devlopment is under testing 
+                    releaseTicket = "TDVOP-59924"   // This is only for testing purpose until devlopment is under testing 
                     jiraIssueStatus                             = jira.getIssueStatusFromKey(releaseTicket)
-                    checkApprover                               = check.deploymentCondition(branchToCheckout, jiraIssueStatus, tagName, true, releaseTicket, tagName, funtionalArea)
+                    //checkApprover                               = check.deploymentCondition(branchToCheckout, jiraIssueStatus, tagName, true, releaseTicket, tagName, funtionalArea)
     
                     def strArray        = tagName.split('-')
                     versionNo           = strArray[strArray.size() - 2]
