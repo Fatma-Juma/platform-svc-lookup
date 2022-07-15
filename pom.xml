@@ -25,9 +25,10 @@
         <springdoc-openapi-ui.version>1.6.9</springdoc-openapi-ui.version>
         <modelmapper.version>3.1.0</modelmapper.version>
         <validation-api.version>2.0.1.Final</validation-api.version>
-        <hibernate-validator.version>7.0.4.Final</hibernate-validator.version>
+        <hibernate-validator.version>6.0.13.Final</hibernate-validator.version>
         <spring-boot-starter-data-redis.version>2.6.3</spring-boot-starter-data-redis.version>
         <jackson-annotations.version>2.13.3</jackson-annotations.version>
+        <jakarta.el.version>4.0.2</jakarta.el.version>
     </properties>
 
     <dependencyManagement>

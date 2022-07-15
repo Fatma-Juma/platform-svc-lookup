@@ -127,7 +127,7 @@ public class ConversionUtils {
             listData.forEach(obj -> {
                 String value = (String) getMethodValueByReflection(getterMethodName, obj);
                 if (valueToCompare.equalsIgnoreCase(value)) {
-                    count.decrementAndGet();
+                    count.getAndIncrement();
                     duplicatedEntries.add(count.get());
                 }
             });
