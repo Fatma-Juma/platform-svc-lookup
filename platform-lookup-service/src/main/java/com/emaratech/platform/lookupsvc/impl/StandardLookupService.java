@@ -21,7 +21,6 @@ import com.emaratech.platform.lookupsvc.api.InvalidDataException;
 import com.emaratech.platform.lookupsvc.api.LookupService;
 import com.emaratech.platform.lookupsvc.store.api.LookupStoreRepository;
 import com.emaratech.platform.lookupsvc.util.ConversionUtils;
-import com.emaratech.platform.lookupsvc.util.Converter;
 import com.emaratech.platform.lookupsvc.util.LookupMetaData;
 import com.emaratech.platform.lookupsvc.util.ValidationUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -37,7 +36,7 @@ public class StandardLookupService implements LookupService {
 
     private final LookupStoreRepository lookupStoreRepository;
 
-    private final Converter modelConverter;
+
 
     private final ObjectMapper objectMapper;
 
@@ -47,14 +46,12 @@ public class StandardLookupService implements LookupService {
      * Constructor overloading to inject the lookupStoreRepository.
      *
      * @param lookupStoreRepository the lookupStoreRepository
-     * @param modelConverter the modelConverter
      * @param objectMapper the objectMapper
      * @param lookupMetaData the lookupMetaData
      */
     public StandardLookupService(LookupStoreRepository lookupStoreRepository,
-            Converter modelConverter, ObjectMapper objectMapper, LookupMetaData lookupMetaData) {
+             ObjectMapper objectMapper, LookupMetaData lookupMetaData) {
         this.lookupStoreRepository = lookupStoreRepository;
-        this.modelConverter = modelConverter;
         this.objectMapper = objectMapper;
         this.lookupMetaData = lookupMetaData;
     }
@@ -122,14 +119,7 @@ public class StandardLookupService implements LookupService {
         }
         LOG.info("Saved the lookup data successfully.");
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void saveRelation(String pClassName, String subClassName, String data) {
-
-    }
+    
 
     /**
      * {@inheritDoc}

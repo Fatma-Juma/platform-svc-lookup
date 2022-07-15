@@ -38,19 +38,10 @@ public interface LookupService {
     void save(String className, String data) throws ResponseStatusException;
 
     /**
-     * Saves the new data into lookup list.
-     *
-     * @param pClassName the pClassName
-     * @param subClassName the subClassName
-     * @param data the data
-     */
-    void saveRelation(String pClassName, String subClassName, String data);
-
-    /**
      * Saves the rdms lookupData into redis.
      *
-     * @param entityName the the entityName
-     * @param data the the data
+     * @param entityName the entityName
+     * @param data the data
      */
     void saveRdmsData(String entityName, String data);
 }

@@ -33,7 +33,7 @@ public class RedisConfiguration {
     /**
      * Copy constructor.
      *
-     * @param redisProperties
+     * @param redisProperties the redisProperties
      */
     public RedisConfiguration(RedisProperties redisProperties) {
         this.redisProperties = redisProperties;
