@@ -1,6 +1,8 @@
 package com.emaratech.platform.lookupsvc.model;
 
 import java.math.BigDecimal;
+import java.util.Objects;
+import java.util.StringJoiner;
 
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Size;
@@ -9,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.builder.EqualsBuilder;
 
 @Getter
 @Setter
@@ -37,5 +40,54 @@ public class City {
 
     @Digits(integer = 1, fraction = 0, message = "isArchived shouldn't be greater than 1.")
     private BigDecimal isArchived;
+
+    /**
+     * Checks the equality between two {@code city} objects.
+     *
+     * @param city  {@code city} object
+     * @return true if both the objects are equal, false otherwise
+     */
+    @Override
+    public boolean equals(Object city) {
+        if (this == city) {
+            return true;
+        }
+
+        if (city == null || getClass() != city.getClass()) {
+            return false;
+        }
+
+        City that = (City) city;
+
+        return new EqualsBuilder()
+                .append(cityId, that.cityId)
+                .append(cityNameEn, that.cityNameEn)
+                .append(cityNameAr, that.cityNameAr)
+                .isEquals();
+    }
+
+    /**
+     * Returns the hashcode of the {@code City} object.
+     *
+     * @return hashcode of the {@code City} object
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(cityId, cityNameEn);
+    }
+
+    /**
+     * Returns the {@code String} representation of {@code city} object.
+     *
+     * @return the string representation of the object.
+     */
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", City.class.getSimpleName() + "(", ")")
+                .add("cityId=" + cityId + "")
+                .add("cityNameEn=" + cityNameEn + "")
+                .add("cityNameAr=" + cityNameAr + "")
+                .toString();
+    }
 
 }

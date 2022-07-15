@@ -2,6 +2,8 @@ package com.emaratech.platform.lookupsvc.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Objects;
+import java.util.StringJoiner;
 
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Size;
@@ -10,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.builder.EqualsBuilder;
 
 @Getter
 @Setter
@@ -37,5 +40,54 @@ public class Emirate implements Serializable {
 
     @Digits(integer = 1, fraction = 0, message = "isArchived shouldn't be greater than 1.")
     private BigDecimal isArchived;
+
+    /**
+     * Checks the equality between two {@code emirate} objects.
+     *
+     * @param emirate {@code emirate} object
+     * @return true if both the objects are equal, false otherwise
+     */
+    @Override
+    public boolean equals(Object emirate) {
+        if (this == emirate) {
+            return true;
+        }
+
+        if (emirate == null || getClass() != emirate.getClass()) {
+            return false;
+        }
+
+        Emirate that = (Emirate) emirate;
+
+        return new EqualsBuilder()
+                .append(emirateId, that.emirateId)
+                .append(emirateNameEn, that.emirateNameEn)
+                .append(emirateNameAr, that.emirateNameAr)
+                .isEquals();
+    }
+
+    /**
+     * Returns the hashcode of the {@code Emirate} object.
+     *
+     * @return hashcode of the {@code Emirate} object
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(emirateId, emirateNameEn);
+    }
+
+    /**
+     * Returns the {@code String} representation of {@code emirate} object.
+     *
+     * @return the string representation of the object.
+     */
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", Emirate.class.getSimpleName() + "(", ")")
+                .add("emirateId=" + emirateId + "")
+                .add("emirateNameEn=" + emirateNameEn + "")
+                .add("emirateNameAr=" + emirateNameAr + "")
+                .toString();
+    }
 
 }

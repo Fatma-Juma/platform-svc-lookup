@@ -2,6 +2,8 @@ package com.emaratech.platform.lookupsvc.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Objects;
+import java.util.StringJoiner;
 
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Size;
@@ -10,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.builder.EqualsBuilder;
 
 @Getter
 @Setter
@@ -36,5 +39,54 @@ public class Area implements Serializable {
 
     @Digits(integer = 1, fraction = 0, message = "isArchived shouldn't be greater than 1.")
     private BigDecimal isArchived;
+
+    /**
+     * Checks the equality between two {@code area} objects.
+     *
+     * @param area {@code area} object
+     * @return true if both the objects are equal, false otherwise
+     */
+    @Override
+    public boolean equals(Object area) {
+        if (this == area) {
+            return true;
+        }
+
+        if (area == null || getClass() != area.getClass()) {
+            return false;
+        }
+
+        Area that = (Area) area;
+
+        return new EqualsBuilder()
+                .append(areaId, that.areaId)
+                .append(areaNameAr, that.areaNameAr)
+                .append(areaNameEn, that.areaNameEn)
+                .isEquals();
+    }
+
+    /**
+     * Returns the hashcode of the {@code Area} object.
+     *
+     * @return hashcode of the {@code Area} object
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(areaId, areaNameEn);
+    }
+
+    /**
+     * Returns the {@code String} representation of {@code area} object.
+     *
+     * @return the string representation of the object.
+     */
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", Area.class.getSimpleName() + "(", ")")
+                .add("areaId=" + areaId + "")
+                .add("areaNameAr=" + areaNameAr + "")
+                .add("areaNameEn=" + areaNameEn + "")
+                .toString();
+    }
 
 }

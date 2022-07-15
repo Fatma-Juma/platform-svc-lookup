@@ -2,6 +2,8 @@ package com.emaratech.platform.lookupsvc.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Objects;
+import java.util.StringJoiner;
 
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Size;
@@ -11,6 +13,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.apache.commons.lang3.builder.EqualsBuilder;
 
 @Getter
 @Setter
@@ -74,4 +77,53 @@ public class Country implements Serializable {
 
     @Digits(integer = 1, fraction = 0, message = "isAlternateOfCountryId shouldn't be greater than 1.")
     private BigDecimal isAlternateOfCountryId;
+
+    /**
+     * Checks the equality between two {@code country} objects.
+     *
+     * @param country  {@code country} object
+     * @return true if both the objects are equal, false otherwise
+     */
+    @Override
+    public boolean equals(Object country) {
+        if (this == country) {
+            return true;
+        }
+
+        if (country == null || getClass() != country.getClass()) {
+            return false;
+        }
+
+        Country that = (Country) country;
+
+        return new EqualsBuilder()
+                .append(countryId, that.countryId)
+                .append(countryNameEn, that.countryNameEn)
+                .append(countryNameAr, that.countryNameAr)
+                .isEquals();
+    }
+
+    /**
+     * Returns the hashcode of the {@code Country} object.
+     *
+     * @return hashcode of the {@code Country} object
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(countryId, countryNameEn);
+    }
+
+    /**
+     * Returns the {@code String} representation of {@code country} object.
+     *
+     * @return the string representation of the object.
+     */
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", Country.class.getSimpleName() + "(", ")")
+                .add("countryId=" + countryId + "")
+                .add("countryNameEn=" + countryNameEn + "")
+                .add("countryNameAr=" + countryNameAr + "")
+                .toString();
+    }
 }
