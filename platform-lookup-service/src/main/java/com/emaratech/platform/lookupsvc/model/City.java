@@ -25,20 +25,20 @@ public class City {
     @Digits(integer = 4, fraction = 0, message = "Country Id shouldn't be greater than 4 digits.")
     private BigDecimal countryId;
 
-    @Size(min = 1, message = "City Name shouldn't be less than 1 character.")
-    @Size(max = 30, message = "City Name shouldn't be greater than 30 characters.")
+    @Size(min = 1, message = "City name shouldn't be less than 1 character.")
+    @Size(max = 30, message = "City name shouldn't be greater than 30 characters.")
     @JsonProperty(value = "nameEn")
     private String cityNameEn;
 
-    @Size(min = 1, message = "City Name shouldn't be less than 1 character.")
-    @Size(max = 30, message = "City Name shouldn't be greater than 30 characters.")
+    @Size(min = 1, message = "City name shouldn't be less than 1 character.")
+    @Size(max = 30, message = "City name shouldn't be greater than 30 characters.")
     @JsonProperty(value = "nameAr")
     private String cityNameAr;
 
-    @Digits(integer = 1, fraction = 0, message = "Emirate Id shouldn't be greater than 1 digit.")
+    @Digits(integer = 1, fraction = 0, message = "Emirate Id shouldn't be greater than 1.")
     private BigDecimal emirateId;
 
-    @Digits(integer = 1, fraction = 0, message = "isArchived shouldn't be greater than 1.")
+    @Digits(integer = 1, fraction = 0, message = "IsArchived shouldn't be greater than 1.")
     private BigDecimal isArchived;
 
     /**

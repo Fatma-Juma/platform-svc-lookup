@@ -24,13 +24,13 @@ public class Emirate implements Serializable {
     @JsonProperty(value = "id")
     private BigDecimal emirateId;
 
-    @Size(min = 1, message = "Emirate Name shouldn't be less than 1 character.")
-    @Size(max = 20, message = "Emirate Name shouldn't be greater than 20 characters.")
+    @Size(min = 1, message = "Emirate name shouldn't be less than 1 character.")
+    @Size(max = 20, message = "Emirate name shouldn't be greater than 20 characters.")
     @JsonProperty(value = "nameEn")
     private String emirateNameEn;
 
-    @Size(min = 1, message = "Emirate Name shouldn't be less than 1 character.")
-    @Size(max = 20, message = "Emirate Name shouldn't be greater than 20 characters.")
+    @Size(min = 1, message = "Emirate name shouldn't be less than 1 character.")
+    @Size(max = 20, message = "Emirate name shouldn't be greater than 20 characters.")
     @JsonProperty(value = "nameAr")
     private String emirateNameAr;
 
@@ -38,7 +38,7 @@ public class Emirate implements Serializable {
     @Size(max = 20, message = "Code shouldn't be greater than 20 characters.")
     private String code;
 
-    @Digits(integer = 1, fraction = 0, message = "isArchived shouldn't be greater than 1.")
+    @Digits(integer = 1, fraction = 0, message = "IsArchived shouldn't be greater than 1.")
     private BigDecimal isArchived;
 
     /**
