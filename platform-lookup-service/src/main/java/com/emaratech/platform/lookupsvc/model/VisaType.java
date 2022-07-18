@@ -5,14 +5,15 @@ import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.StringJoiner;
 
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.Size;
+
+import org.apache.commons.lang3.builder.EqualsBuilder;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.Size;
 
 @Getter
 @Setter
@@ -89,7 +90,6 @@ public class VisaType implements Serializable {
     private BigDecimal isValidityFromIssueDate;
 
     private BigDecimal isValidityFromEntryDate;
-
 
     /**
      * Checks the equality between two {@code visaType} objects.

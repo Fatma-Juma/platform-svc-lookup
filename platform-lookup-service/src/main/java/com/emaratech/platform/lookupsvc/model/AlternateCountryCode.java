@@ -5,11 +5,12 @@ import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.StringJoiner;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.lang3.builder.EqualsBuilder;
 
 /**
  * AlternateCountryCode holds the alternate country code data.
@@ -71,6 +72,5 @@ public class AlternateCountryCode implements Serializable {
                 .add("alternateCountryCodeId=" + alternateCountryCodeId + "")
                 .toString();
     }
-
 
 }

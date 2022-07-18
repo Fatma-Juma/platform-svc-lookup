@@ -62,23 +62,17 @@ public class ConversionUtils {
      * Sets the primary Key.
      *
      * @param clazz the clazz
-     * @param data the data
      * @param newIdValue the newIdValue
      * @param <T> the T
-     * @param objectMapper the objectMapper
      * @param setterMethodName the setterMethodName
      * @return the target object
      */
-    public static <T> T setId(Object clazz, String data, Long newIdValue, ObjectMapper objectMapper, String setterMethodName) {
+    public static <T> T setId(Object clazz, Long newIdValue, String setterMethodName) {
 
         try {
-            clazz = objectMapper.readValue(data, Class.forName(((Class) clazz).getName()));
             Method method = clazz.getClass().getDeclaredMethod(setterMethodName, BigDecimal.class);
             method.setAccessible(true);
             method.invoke(clazz, BigDecimal.valueOf(newIdValue));
-        } catch (JsonProcessingException e) {
-            LOG.error("Error occurred during the json transformation: {}", e.getMessage());
-            clazz = null;
         } catch (NoSuchMethodException e) {
             LOG.error("Error occurred during the class method fetched : {}", e.getMessage());
             clazz = null;
@@ -87,9 +81,6 @@ public class ConversionUtils {
             clazz = null;
         } catch (IllegalAccessException e) {
             LOG.error("Error occurred during the class method access : {}", e.getMessage());
-            clazz = null;
-        } catch (ClassNotFoundException e) {
-            LOG.error("Error occurred during the class not found : {}", e.getMessage());
             clazz = null;
         }
         return (T) clazz;
@@ -156,5 +147,29 @@ public class ConversionUtils {
         }
 
         return value;
+    }
+
+    /**
+     * Converts the json data into target entity class.
+     *
+     * @param clazz the clazz
+     * @param data the data
+     * @param objectMapper the objectMapper
+     * @param <T> the T
+     * @return the target object
+     */
+    public static <T> T convertJsonToTargetClass(Object clazz, String data, ObjectMapper objectMapper) {
+
+        try {
+            clazz = objectMapper.readValue(data, Class.forName(((Class) clazz).getName()));
+        } catch (JsonProcessingException e) {
+            LOG.error("Error occurred during the json transformation: {}", e.getMessage());
+            clazz = null;
+
+        } catch (ClassNotFoundException e) {
+            LOG.error("Entity Name not found: {} ", e.getMessage());
+            clazz = null;
+        }
+        return (T) clazz;
     }
 }

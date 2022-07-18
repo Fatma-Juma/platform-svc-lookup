@@ -5,14 +5,16 @@ import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.StringJoiner;
 
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
+import org.apache.commons.lang3.builder.EqualsBuilder;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.Size;
 
 /**
  * Destination class for holding the destination data.
@@ -31,6 +33,7 @@ public class Destination implements Serializable {
 
     @Size(min = 1, message = "Destination name shouldn't be less than 1 character.")
     @Size(max = 200, message = "Destination name shouldn't be greater than 200 characters.")
+    @NotBlank(message = "Destination Name should not be empty.")
     @JsonProperty(value = "nameEn")
     private String destinationNameEn;
 
@@ -92,6 +95,5 @@ public class Destination implements Serializable {
                 .add("destinationNameEn=" + destinationNameEn + "")
                 .toString();
     }
-
 
 }

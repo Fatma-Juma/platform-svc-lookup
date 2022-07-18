@@ -8,12 +8,13 @@ import java.util.StringJoiner;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Size;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.apache.commons.lang3.builder.EqualsBuilder;
 
 @Getter
 @Setter
@@ -81,7 +82,7 @@ public class Country implements Serializable {
     /**
      * Checks the equality between two {@code country} objects.
      *
-     * @param country  {@code country} object
+     * @param country {@code country} object
      * @return true if both the objects are equal, false otherwise
      */
     @Override

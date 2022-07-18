@@ -36,8 +36,6 @@ public class StandardLookupService implements LookupService {
 
     private final LookupStoreRepository lookupStoreRepository;
 
-
-
     private final ObjectMapper objectMapper;
 
     private final LookupMetaData lookupMetaData;
@@ -50,7 +48,7 @@ public class StandardLookupService implements LookupService {
      * @param lookupMetaData the lookupMetaData
      */
     public StandardLookupService(LookupStoreRepository lookupStoreRepository,
-             ObjectMapper objectMapper, LookupMetaData lookupMetaData) {
+            ObjectMapper objectMapper, LookupMetaData lookupMetaData) {
         this.lookupStoreRepository = lookupStoreRepository;
         this.objectMapper = objectMapper;
         this.lookupMetaData = lookupMetaData;
@@ -79,7 +77,9 @@ public class StandardLookupService implements LookupService {
         return listData;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<?> findById(String entityName, Long id) throws ResponseStatusException {
         try {
@@ -119,7 +119,6 @@ public class StandardLookupService implements LookupService {
         }
         LOG.info("Saved the lookup data successfully.");
     }
-    
 
     /**
      * {@inheritDoc}
@@ -141,30 +140,33 @@ public class StandardLookupService implements LookupService {
     private String createOrAppendData(String className, String data) throws InvalidDataException,
         ConstraintViolationException {
         String requestedData;
+        Object updatedObject;
+        Long newId = 1L;
+
+        // Getting the target class
         Class clazz = ConversionUtils.getClassFromString(className);
+        // checks class is not null or not.
         if (Objects.isNull(clazz)) {
             throw new InvalidDataException("EntityName is not valid: [" + className + "]");
         }
+        // convert json to target class object.
+        updatedObject = ConversionUtils.convertJsonToTargetClass(clazz, data, objectMapper);
+        if (Objects.isNull(updatedObject)) {
+            throw new InvalidDataException("Invalid request data is passed.");
+        }
+
+        // validates the data.
+        Set violations = ValidationUtils.validate(updatedObject);
+        if (!CollectionUtils.isEmpty(violations)) {
+            throw new ConstraintViolationException("Data validation errors.", violations);
+        }
+        // Getting the existing data
         List<Object> listData = getExistingData(className);
+        // Getting the target class setter method for primary id
         String setterMethodName = lookupMetaData.getIdSetterForEntity(className);
-        if (!CollectionUtils.isEmpty(listData)) {
-            LOG.info("Appending the new record..");
-            try {
-                String getterMethodName = lookupMetaData.getIdGetterForEntity(className);
-                // setting up the id value // list size + 1 would be new id.
-                Long newId = ConversionUtils.getMaxIdFromEntity(listData, getterMethodName) + 1L;
-
-                // Start objects conversions.
-                Object updatedObject = ConversionUtils.setId(clazz, data, newId, objectMapper, setterMethodName);
-                if (Objects.isNull(updatedObject)) {
-                    LOG.error("Error occurred during setting the new Id.");
-                    throw new InvalidDataException("UnExpected Error comes during setting up the new Id");
-                }
-
-                Set violations = ValidationUtils.validate(updatedObject);
-                if (!CollectionUtils.isEmpty(violations)) {
-                    throw new ConstraintViolationException("Data validation errors.", violations);
-                }
+        try {
+            if (!CollectionUtils.isEmpty(listData)) {
+                LOG.info("Appending the new record..");
                 // validation- duplicate
                 String methodName = lookupMetaData.getMethodNameForDuplicationForEntity(className);
                 String value = (String) ConversionUtils.getMethodValueByReflection(methodName, updatedObject);
@@ -173,30 +175,28 @@ public class StandardLookupService implements LookupService {
                     throw new InvalidDataException("[" + fieldName + "] shouldn't be duplicate.");
                 }
 
-                listData.add(updatedObject);
-                requestedData = objectMapper.writeValueAsString(listData);
-            } catch (JsonProcessingException ex) {
-                LOG.error("Error occurred during the json transformation: {}", ex.getMessage());
-                throw new InvalidDataException("Data is not valid.", ex);
+                String getterMethodName = lookupMetaData.getIdGetterForEntity(className);
+                newId = ConversionUtils.getMaxIdFromEntity(listData, getterMethodName) + 1L;
             }
-        } else {
-            LOG.info("Saving first record and data is {}", data);
-            // setting up the id value //Always 1 for first record.
-            Object updatedObject = ConversionUtils.setId(clazz, data, 1L, objectMapper, setterMethodName);
-            try {
-                // Converting the updated entity to json.
-                requestedData = objectMapper.writeValueAsString(updatedObject);
-            } catch (JsonProcessingException ex) {
-                LOG.error("Error occurred during the json transformation: {}", ex.getMessage());
-                throw new InvalidDataException("Data is not valid.", ex);
+            // setting up the id value // list size + 1L or 1L would be new id.
+            updatedObject = ConversionUtils.setId(updatedObject, newId, setterMethodName);
+            if (Objects.isNull(updatedObject)) {
+                LOG.error("Error occurred during setting the new Id.");
+                throw new InvalidDataException("UnExpected Error comes during setting up the new Id");
             }
+            listData.add(updatedObject);
+            requestedData = objectMapper.writeValueAsString(listData);
+
+        } catch (JsonProcessingException ex) {
+            LOG.error("Error occurred during the json transformation: {}", ex.getMessage());
+            throw new InvalidDataException("Data is not valid.", ex);
         }
         return requestedData;
     }
 
     /**
      * Gets the entity existing data list.
-     * 
+     *
      * @param entityName the entityName
      * @return List of target entity
      * @throws InvalidDataException if entity is not found or data parsing is
