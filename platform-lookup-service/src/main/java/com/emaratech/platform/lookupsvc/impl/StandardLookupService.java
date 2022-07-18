@@ -3,6 +3,7 @@ package com.emaratech.platform.lookupsvc.impl;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -160,6 +161,7 @@ public class StandardLookupService implements LookupService {
         if (!CollectionUtils.isEmpty(violations)) {
             throw new ConstraintViolationException("Data validation errors.", violations);
         }
+
         // Getting the existing data
         List<Object> listData = getExistingData(className);
         // Getting the target class setter method for primary id
@@ -169,10 +171,21 @@ public class StandardLookupService implements LookupService {
                 LOG.info("Appending the new record..");
                 // validation- duplicate
                 String methodName = lookupMetaData.getMethodNameForDuplicationForEntity(className);
-                String value = (String) ConversionUtils.getMethodValueByReflection(methodName, updatedObject);
-                if (!CollectionUtils.isEmpty(ConversionUtils.checkDuplicate(listData, value, methodName))) {
-                    String fieldName = methodName.substring(3);
-                    throw new InvalidDataException("[" + fieldName + "] shouldn't be duplicate.");
+                String[] values = new String[1];
+                String[] methodNames = new String[] {methodName};
+                if (methodName.contains(",")) {
+                    methodNames = methodName.split(",");
+                    values = new String[methodNames.length];
+                }
+                int index = 0;
+                for (String mName : methodNames) {
+                    values[index] = String.valueOf(ConversionUtils.getMethodValueByReflection(mName, updatedObject));
+                    index++;
+                }
+
+                if (!CollectionUtils.isEmpty(ConversionUtils.checkDuplicate(listData, values, methodNames))) {
+                    String fieldName = methodName.replaceAll("get", "");
+                    throw new InvalidDataException("[" + fieldName + "] already exists.");
                 }
 
                 String getterMethodName = lookupMetaData.getIdGetterForEntity(className);
@@ -203,11 +216,11 @@ public class StandardLookupService implements LookupService {
      *             failed
      */
 
-    private List getExistingData(String entityName) throws InvalidDataException {
+    private List<Object> getExistingData(String entityName) throws InvalidDataException {
 
         // Constructing the target EntityObject
         Class clazz = ConversionUtils.getClassFromString(entityName);
-        List<?> listData;
+        List<Object> listData;
         if (Objects.isNull(clazz)) {
             throw new InvalidDataException("EntityName is not valid: [" + entityName + "]");
         }
@@ -217,6 +230,6 @@ public class StandardLookupService implements LookupService {
         } catch (IOException e) {
             throw new InvalidDataException("Exception occurred during jsonArrayToLis method processing.");
         }
-        return listData;
+        return listData == null ? new ArrayList<>() : listData;
     }
 }

@@ -46,7 +46,7 @@ public class LookupMetaData {
 
         classMetaDataMap.put("Destination-Id-Setter", "setDestinationId");
         classMetaDataMap.put("Destination-Id-Getter", "getDestinationId");
-        classMetaDataMap.put("Destination-Dup-Field", "getDestinationCode");
+        classMetaDataMap.put("Destination-Dup-Field", "getDestinationCode,getCountryId");
 
         classMetaDataMap.put("AlternateCountryCode-Id-Setter", "setAlternateCountryCodeId");
         classMetaDataMap.put("AlternateCountryCode-Id-Getter", "getAlternateCountryCodeId");

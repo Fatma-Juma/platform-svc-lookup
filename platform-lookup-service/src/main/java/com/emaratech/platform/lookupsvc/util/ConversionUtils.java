@@ -106,18 +106,29 @@ public class ConversionUtils {
      * Checks duplicates in the list.
      *
      * @param listData the listData
-     * @param valueToCompare the valueToCompare
-     * @param getterMethodName the getterMethodName
+     * @param valuesToCompare the valueToCompares
+     * @param getterMethodsName the getterMethodsName
      * @return list of duplicate count
      */
-    public static List<Integer> checkDuplicate(List<?> listData, String valueToCompare, String getterMethodName) {
+    public static List<Integer> checkDuplicate(List<?> listData, String[] valuesToCompare, String[] getterMethodsName) {
 
         return listData.stream().flatMap(i -> {
             final AtomicInteger count = new AtomicInteger();
             final List<Integer> duplicatedEntries = new ArrayList<>();
             listData.forEach(obj -> {
-                String value = (String) getMethodValueByReflection(getterMethodName, obj);
-                if (valueToCompare.equalsIgnoreCase(value)) {
+                String[] existingValues = new String[valuesToCompare.length];
+                int index = 0;
+                for (String methodName : getterMethodsName) {
+                    existingValues[index] = String.valueOf(getMethodValueByReflection(methodName, obj));
+                    index++;
+                }
+                index = 0;
+                for (int iLoop = 0; iLoop < existingValues.length; iLoop++) {
+                    if (existingValues[iLoop].equals(valuesToCompare[iLoop])) {
+                        index++;
+                    }
+                }
+                if (index == valuesToCompare.length) {
                     count.getAndIncrement();
                     duplicatedEntries.add(count.get());
                 }
@@ -138,6 +149,7 @@ public class ConversionUtils {
         try {
             value = clazz.getClass()
                     .getMethod(getterMethodName).invoke(clazz);
+
         } catch (IllegalAccessException e) {
             LOG.error("Error occurred : IllegalAccessException", e);
         } catch (InvocationTargetException e) {
