@@ -31,6 +31,8 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
+    private static final String LOGGING_EXCEPTION = "Logging exception.";
+
     /**
      * Catches the ResponseStatusException exception.
      *
@@ -47,6 +49,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         } else {
             apiError.setMessage(ex.getReason());
         }
+        LOG.warn(LOGGING_EXCEPTION,  ex);
         return buildResponseEntity(apiError);
     }
 
@@ -60,7 +63,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ResponseStatus(value = INTERNAL_SERVER_ERROR)
     public ResponseEntity<Object> handleSessionException(
                                                          RuntimeException ex) {
-
+        LOG.warn(LOGGING_EXCEPTION,  ex);
         ApiError apiError = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR);
         apiError.setMessage(ex.getMessage());
         return buildResponseEntity(apiError);
@@ -84,7 +87,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         }
         ApiError apiError = new ApiError(status);
         apiError.setMessage(stringBuilder.toString());
-
+        LOG.warn(LOGGING_EXCEPTION,  ex);
         return buildResponseEntity(apiError);
     }
 
@@ -98,6 +101,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ResponseStatus(value = FORBIDDEN)
     public final ResponseEntity<Object> handleUnauthorizedException(AccessDeniedException ex) {
 
+        LOG.warn(LOGGING_EXCEPTION,  ex);
         ApiError apiError = new ApiError(HttpStatus.FORBIDDEN);
         apiError.setMessage(ex.getLocalizedMessage());
 
@@ -106,9 +110,10 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(BAD_REQUEST)
-    public final ResponseEntity<Object> handleConstraintViolationException(ConstraintViolationException exception) {
+    public final ResponseEntity<Object> handleConstraintViolationException(ConstraintViolationException ex) {
 
-        String errorMessage = new ArrayList<>(exception.getConstraintViolations()).get(0).getMessage();
+        LOG.warn(LOGGING_EXCEPTION,  ex);
+        String errorMessage = new ArrayList<>(ex.getConstraintViolations()).get(0).getMessage();
         ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST);
         apiError.setMessage(errorMessage);
         return buildResponseEntity(apiError);
@@ -123,6 +128,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(Exception.class)
     public final ResponseEntity<Object> handleAllExceptions(Exception ex) {
 
+        LOG.warn(LOGGING_EXCEPTION,  ex);
         ApiError apiError = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR);
         apiError.setMessage(ex.getLocalizedMessage());
 
