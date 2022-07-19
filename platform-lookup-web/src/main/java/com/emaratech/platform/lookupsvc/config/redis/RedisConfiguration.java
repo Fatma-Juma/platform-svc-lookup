@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.redis.connection.RedisNode;
 import org.springframework.data.redis.connection.RedisSentinelConfiguration;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettucePoolingClientConfiguration;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -19,10 +20,9 @@ import io.lettuce.core.ClientOptions;
 import io.lettuce.core.resource.ClientResources;
 
 /**
- * These are the redis configuration for icm cache.
+ * These are the redis configuration for lookup service.
  */
 @Configuration
-@PropertySource("classpath:application-redis.properties")
 public class RedisConfiguration {
 
     private final RedisProperties redisProperties;
@@ -53,7 +53,8 @@ public class RedisConfiguration {
                     .forEach(s -> sentinelConfig.addSentinel(new RedisNode(redisProperties.getHost(), redisProperties.getPort())));
             return new LettuceConnectionFactory(sentinelConfig);
         } else {
-            return new LettuceConnectionFactory();
+            RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration(redisProperties.getHost(), redisProperties.getPort());
+            return new LettuceConnectionFactory(redisStandaloneConfiguration);
         }
     }
 

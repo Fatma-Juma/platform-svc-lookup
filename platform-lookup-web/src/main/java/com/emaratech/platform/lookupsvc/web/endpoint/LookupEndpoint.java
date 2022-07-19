@@ -5,6 +5,8 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ForkJoinPool;
@@ -204,9 +206,37 @@ public class LookupEndpoint {
         if (!CollectionUtils.isEmpty(lookups)) {
             lookupDTOS = (List<LookupDTO>) conversionHelper
                     .buildResponseByCode(lookups, lookupType, code);
-            lookupDTOS.get(0).setCode(code);
+            if (!CollectionUtils.isEmpty(lookupDTOS)) {
+                lookupDTOS.get(0).setCode(code);
+            }
         }
         return ResponseEntity.ok(!CollectionUtils.isEmpty(lookupDTOS) ? lookupDTOS : Collections.emptyList());
+    }
+
+    /**
+     * Gets the country by code.
+     *
+     * @param code the code
+     * @return list of objects
+     * @throws ResponseStatusException if unable to fetch the lookup data
+     */
+    @GetMapping("/country/code/{code}")
+    public ResponseEntity<List<?>> getCountryByCode(@PathVariable(value = "code") String code)
+        throws ResponseStatusException {
+        return getLookupByLTypeAndCode("Country", code);
+    }
+
+    /**
+     * Gets the destination by code.
+     *
+     * @param code the code
+     * @return List of objects
+     * @throws ResponseStatusException if unable to fetch the lookup data
+     */
+    @GetMapping("/destination/code/{code}")
+    public ResponseEntity<List<?>> getDestinationByCode(@PathVariable(value = "code") String code)
+            throws ResponseStatusException {
+        return getLookupByLTypeAndCode("Destination", code);
     }
 
     /**
@@ -286,6 +316,39 @@ public class LookupEndpoint {
                                                        visaType.getVisaTypeNameEn(),
                                                        visaType.getVisaTypeNameAr()))
                 .collect(Collectors.toList()));
+    }
+
+    /**
+     * Gets the Indian Visa Types.
+     *
+     * @return list of Objects
+     */
+
+    @GetMapping("/indianVisaCardTypes")
+    public ResponseEntity<List<LookupSubResponse>> getIndianVisaType() {
+
+        List<LookupSubResponse> indianVisaTypeList = new ArrayList<>();
+
+        for (IndianVisaCardType.Name cardType: IndianVisaCardType.Name.values()) {
+            LookupSubResponse indianVisaType = new LookupSubResponse();
+            indianVisaType.setId(cardType.getId());
+            indianVisaType.setNameAr(cardType.getDescAr());
+            indianVisaType.setNameEn(cardType.getDescEn());
+            indianVisaTypeList.add(indianVisaType);
+        }
+        return ResponseEntity.ok(indianVisaTypeList);
+
+    }
+
+    /**
+     * Gets the flight details by code.
+     *
+     * @param code the code
+     * @return list of objects
+     */
+    @GetMapping("/flightCode/code/{code}")
+    public ResponseEntity<List<?>> getFlightDetailsByCode(@PathVariable ("code") String code) {
+        return getLookupByLTypeAndCode("Flight", code);
     }
 
     /**
