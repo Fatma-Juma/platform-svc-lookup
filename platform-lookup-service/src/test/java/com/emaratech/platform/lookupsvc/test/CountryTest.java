@@ -1,12 +1,16 @@
 package com.emaratech.platform.lookupsvc.test;
 
-import com.emaratech.platform.lookupsvc.model.Country;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.math.BigDecimal;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
+import com.emaratech.platform.lookupsvc.model.Country;
+
+/**
+ * Country test class.
+ */
 public class CountryTest {
 
     private BigDecimal id = BigDecimal.valueOf(1L);
@@ -32,9 +36,32 @@ public class CountryTest {
         country.setCountryId(id);
         country.setCountryNameEn("Pakistan");
         country.setCountryCode("PAK");
+        country.setCountryIso("ISO");
+        country.setNationality("Pakistani");
+        country.setRegionId(id);
+        country.setIsAlternateOfCountryId(id);
+        country.setIsArabNation(id);
+        country.setIsArchived(id);
+        country.setIsEntryAllowed(id);
+        country.setIsGcc(id);
+        country.setIsMaidAllowed(id);
+        country.setIsNsdReviewRequired(id);
+        country.setIsReciprocityAllowed(id);
+        country.setIsTourist(id);
         assertEquals(1L, country.getCountryId().longValue());
         assertEquals("Pakistan", country.getCountryNameEn());
         assertEquals("PAK", country.getCountryCode());
+        assertEquals("ISO", country.getCountryIso());
+        assertEquals(1L, country.getIsAlternateOfCountryId().longValue());
+        assertEquals(1L, country.getIsArchived().longValue());
+        assertEquals(1L, country.getIsArabNation().longValue());
+        assertEquals(1L, country.getIsGcc().longValue());
+        assertEquals(1L, country.getIsEntryAllowed().longValue());
+        assertEquals(1L, country.getIsNsdReviewRequired().longValue());
+        assertEquals(1L, country.getIsReciprocityAllowed().longValue());
+        assertEquals(1L, country.getIsTourist().longValue());
+        assertEquals(1L, country.getRegionId().longValue());
+        assertEquals("Pakistani", country.getNationality());
     }
 
     /**
