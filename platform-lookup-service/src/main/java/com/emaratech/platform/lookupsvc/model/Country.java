@@ -8,21 +8,38 @@ import java.util.StringJoiner;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Size;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 /**
  * Country Class for holding the country data.
  */
 public class Country implements Serializable {
+
+    /**
+     *
+     *
+     * @param countryId
+     * @param countryNameEn
+     * @param countryNameAr
+     * @param countryCode
+     */
+    public Country(BigDecimal countryId, String countryNameEn, String countryNameAr, String countryCode) {
+        this.countryId = countryId;
+        this.countryNameEn = countryNameEn;
+        this.countryNameAr = countryNameAr;
+        this.countryCode = countryCode;
+    }
 
     @JsonProperty(value = "id")
     private BigDecimal countryId;
@@ -79,6 +96,7 @@ public class Country implements Serializable {
     @Digits(integer = 1, fraction = 0, message = "IsAlternateOfCountryId shouldn't be greater than 1.")
     private BigDecimal isAlternateOfCountryId;
 
+
     /**
      * Checks the equality between two {@code country} objects.
      *
@@ -101,6 +119,7 @@ public class Country implements Serializable {
                 .append(countryId, that.countryId)
                 .append(countryNameEn, that.countryNameEn)
                 .append(countryNameAr, that.countryNameAr)
+                .append(countryCode, that.countryCode)
                 .isEquals();
     }
 
@@ -111,7 +130,7 @@ public class Country implements Serializable {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(countryId, countryNameEn);
+        return Objects.hash(countryId, countryCode);
     }
 
     /**
@@ -125,6 +144,7 @@ public class Country implements Serializable {
                 .add("countryId=" + countryId + "")
                 .add("countryNameEn=" + countryNameEn + "")
                 .add("countryNameAr=" + countryNameAr + "")
+                .add("countryCode=" + countryCode + "")
                 .toString();
     }
 }
