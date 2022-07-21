@@ -39,6 +39,11 @@
                 <version>${spring-boot-starter-data-redis.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-validation</artifactId>
+                <version>${spring-boot-starter-data-redis.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>io.github.millij</groupId>
                 <artifactId>poi-object-mapper</artifactId>
                 <version>${poi-object-mapper.version}</version>

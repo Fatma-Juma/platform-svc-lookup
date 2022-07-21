@@ -6,6 +6,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 
+import org.hibernate.validator.messageinterpolation.ParameterMessageInterpolator;
 import org.springframework.stereotype.Component;
 
 /**
@@ -22,7 +23,11 @@ public class ValidationUtils {
      */
     public static Set<?> validate(Object targetClass) {
 
-        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+       Validator validator = Validation.byDefaultProvider()
+                .configure()
+                .messageInterpolator(new ParameterMessageInterpolator())
+                .buildValidatorFactory()
+                .getValidator();;
         Set<ConstraintViolation<Object>> constraintViolations = validator.validate(targetClass);
         return constraintViolations;
     }

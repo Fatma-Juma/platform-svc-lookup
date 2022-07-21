@@ -16,8 +16,8 @@ pipeline {
         //User Provided
         //Build & Nexus Related
         nexusGroupId                = 'ae.emaratech.vision-microservices'
-        buildDirectoryAPI           = './platform-lookup-service/target/'
-        buildFileAPI                = 'platform-lookup-service-0.0.1-SNAPSHOT.jar'
+        buildDirectoryAPI           = './platform-lookup-web/target/'
+        buildFileAPI                = 'platform-lookup-web-0.0.1-SNAPSHOT.jar'
         nexusArtifactTypeAPI        = 'jar'
         nexusArtifactId             = 'platform-svc-lookup'
         nexusVersion                = ''
