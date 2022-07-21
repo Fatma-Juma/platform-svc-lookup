@@ -381,7 +381,7 @@ public class LookupEndpoint {
                                                      ResponseEntity.status(HttpStatus.REQUEST_TIMEOUT).body("Request timeout occurred.")));
         try {
             InputStream inputStream = multipartFile.getInputStream();
-            File tempFile = new File(System.getProperty("java.io.tmpdir") + "temp.xlsx");
+            File tempFile = new File(System.getProperty("user.dir") + "temp.xlsx");
             OutputStream outputStream = new FileOutputStream(tempFile);
             inputStream.transferTo(outputStream);
             inputStream.close();
