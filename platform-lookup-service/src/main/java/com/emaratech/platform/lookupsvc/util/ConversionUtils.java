@@ -8,8 +8,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.OptionalInt;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +23,13 @@ import com.fasterxml.jackson.databind.type.CollectionType;
 public class ConversionUtils {
 
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
+    /**
+     * Making the constructor private.
+     */
+    private ConversionUtils() {
+
+    }
 
     /**
      * Gets the target entity class instance.
@@ -112,7 +118,7 @@ public class ConversionUtils {
      */
     public static boolean checkDuplicate(List<?> listData, String[] valuesToCompare, String[] getterMethodsName) {
 
-        final AtomicInteger count = new AtomicInteger();
+        final AtomicBoolean isExist = new AtomicBoolean(false);
         listData.forEach(obj -> {
             String[] existingValues = new String[valuesToCompare.length];
            int index = 0;
@@ -127,17 +133,13 @@ public class ConversionUtils {
                 }
             }
             if (index == existingValues.length) {
-                count.getAndIncrement();
+                isExist.set(true);
                 return;
             }
 
         });
 
-        if (count.get() > 0) {
-            return true;
-        } else  {
-            return false;
-        }
+      return isExist.get();
     }
 
     /**
