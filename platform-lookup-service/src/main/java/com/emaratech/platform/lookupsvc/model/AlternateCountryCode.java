@@ -5,6 +5,8 @@ import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.StringJoiner;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -12,12 +14,26 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 /**
  * AlternateCountryCode holds the alternate country code data.
  */
-@Getter
-@Setter
 public class AlternateCountryCode implements Serializable {
+
+    /**
+     *
+     *
+     * @param alternateCountryCodeId
+     * @param alternateCountryCode
+     */
+    public AlternateCountryCode(BigDecimal alternateCountryCodeId, String alternateCountryCode) {
+        this.alternateCountryCodeId = alternateCountryCodeId;
+        this.alternateCountryCode = alternateCountryCode;
+    }
 
     @JsonProperty(value = "id")
     private BigDecimal alternateCountryCodeId;
@@ -31,23 +47,24 @@ public class AlternateCountryCode implements Serializable {
     /**
      * Checks the equality between two {@code alternateCountryCode} objects.
      *
-     * @param alternateCountryCode {@code alternateCountryCode} object
+     * @param alternateCountryCodeObject {@code alternateCountryCode} object
      * @return true if both the objects are equal, false otherwise
      */
     @Override
-    public boolean equals(Object alternateCountryCode) {
-        if (this == alternateCountryCode) {
+    public boolean equals(Object alternateCountryCodeObject) {
+        if (this == alternateCountryCodeObject) {
             return true;
         }
 
-        if (alternateCountryCode == null || getClass() != alternateCountryCode.getClass()) {
+        if (alternateCountryCodeObject == null || getClass() != alternateCountryCodeObject.getClass()) {
             return false;
         }
 
-        AlternateCountryCode that = (AlternateCountryCode) alternateCountryCode;
+        AlternateCountryCode that = (AlternateCountryCode) alternateCountryCodeObject;
 
         return new EqualsBuilder()
                 .append(alternateCountryCodeId, that.alternateCountryCodeId)
+                .append(alternateCountryCode, that.alternateCountryCode)
                 .isEquals();
     }
 
@@ -58,7 +75,7 @@ public class AlternateCountryCode implements Serializable {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(alternateCountryCodeId);
+        return Objects.hash(alternateCountryCodeId, alternateCountryCode);
     }
 
     /**
@@ -70,6 +87,7 @@ public class AlternateCountryCode implements Serializable {
     public String toString() {
         return new StringJoiner(", ", AlternateCountryCode.class.getSimpleName() + "(", ")")
                 .add("alternateCountryCodeId=" + alternateCountryCodeId + "")
+                .add("alternateCountryCode=" + alternateCountryCode + "")
                 .toString();
     }
 

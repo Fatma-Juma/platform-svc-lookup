@@ -1,5 +1,6 @@
 package com.emaratech.platform.lookupsvc.model;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.StringJoiner;
@@ -7,6 +8,8 @@ import java.util.StringJoiner;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Size;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -16,10 +19,24 @@ import lombok.Setter;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 /**
  * City Class for holding the city data.
  */
-public class City {
+public class City implements Serializable{
+        /**
+         *
+         *
+         * @param cityId
+         * @param cityNameEn
+         * @param cityNameAr
+         */
+        public City(BigDecimal cityId, String cityNameEn, String cityNameAr) {
+            this.cityId = cityId;
+            this.cityNameEn = cityNameEn;
+            this.cityNameAr = cityNameAr;
+        }
     @JsonProperty(value = "id")
     private BigDecimal cityId;
 

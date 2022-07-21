@@ -8,6 +8,8 @@ import java.util.StringJoiner;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Size;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -17,10 +19,24 @@ import lombok.Setter;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 /**
  * Area Class for holding the area data.
  */
 public class Area implements Serializable {
+    /**
+     *
+     *
+     * @param areaId
+     * @param areaNameAr
+     * @param areaNameEn
+     */
+    public Area(BigDecimal areaId, String areaNameAr, String areaNameEn) {
+        this.areaId = areaId;
+        this.areaNameAr = areaNameAr;
+        this.areaNameEn = areaNameEn;
+    }
 
     @JsonProperty(value = "id")
     private BigDecimal areaId;
