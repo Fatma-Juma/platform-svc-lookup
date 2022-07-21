@@ -31,7 +31,7 @@ public class LookupMetaData {
 
         classMetaDataMap.put("Area-Id-Setter", "setAreaId");
         classMetaDataMap.put("Area-Id-Getter", "getAreaId");
-        classMetaDataMap.put("Area-Dup-Field", "getAreaEn");
+        classMetaDataMap.put("Area-Dup-Field", "getAreaNameEn");
 
         classMetaDataMap.put("City-Id-Setter", "setCityId");
         classMetaDataMap.put("City-Id-Getter", "getCityId");

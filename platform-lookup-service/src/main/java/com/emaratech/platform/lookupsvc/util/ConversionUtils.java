@@ -108,33 +108,36 @@ public class ConversionUtils {
      * @param listData the listData
      * @param valuesToCompare the valueToCompares
      * @param getterMethodsName the getterMethodsName
-     * @return list of duplicate count
+     * @return boolean true or false
      */
-    public static List<Integer> checkDuplicate(List<?> listData, String[] valuesToCompare, String[] getterMethodsName) {
+    public static boolean checkDuplicate(List<?> listData, String[] valuesToCompare, String[] getterMethodsName) {
 
-        return listData.stream().flatMap(i -> {
-            final AtomicInteger count = new AtomicInteger();
-            final List<Integer> duplicatedEntries = new ArrayList<>();
-            listData.forEach(obj -> {
-                String[] existingValues = new String[valuesToCompare.length];
-                int index = 0;
-                for (String methodName : getterMethodsName) {
-                    existingValues[index] = String.valueOf(getMethodValueByReflection(methodName, obj));
+        final AtomicInteger count = new AtomicInteger();
+        listData.forEach(obj -> {
+            String[] existingValues = new String[valuesToCompare.length];
+           int index = 0;
+            for (String methodName : getterMethodsName) {
+                existingValues[index] = String.valueOf(getMethodValueByReflection(methodName, obj));
+                index++;
+            }
+            index = 0;
+            for (int iLoop = 0; iLoop < existingValues.length; iLoop++) {
+                if (existingValues[iLoop].equals(valuesToCompare[iLoop])) {
                     index++;
                 }
-                index = 0;
-                for (int iLoop = 0; iLoop < existingValues.length; iLoop++) {
-                    if (existingValues[iLoop].equals(valuesToCompare[iLoop])) {
-                        index++;
-                    }
-                }
-                if (index == valuesToCompare.length) {
-                    count.getAndIncrement();
-                    duplicatedEntries.add(count.get());
-                }
-            });
-            return duplicatedEntries.stream();
-        }).collect(Collectors.toList());
+            }
+            if (index == existingValues.length) {
+                count.getAndIncrement();
+                return;
+            }
+
+        });
+
+        if (count.get() > 0) {
+            return true;
+        } else  {
+            return false;
+        }
     }
 
     /**

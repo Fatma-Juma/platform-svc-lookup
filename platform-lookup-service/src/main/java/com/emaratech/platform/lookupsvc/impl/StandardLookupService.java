@@ -183,7 +183,7 @@ public class StandardLookupService implements LookupService {
                     index++;
                 }
 
-                if (!CollectionUtils.isEmpty(ConversionUtils.checkDuplicate(listData, values, methodNames))) {
+                if ((ConversionUtils.checkDuplicate(listData, values, methodNames))) {
                     String fieldName = methodName.replaceAll("get", "");
                     throw new InvalidDataException("[" + fieldName + "] already exists.");
                 }

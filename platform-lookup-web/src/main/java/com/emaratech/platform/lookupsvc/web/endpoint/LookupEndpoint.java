@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ForkJoinPool;
@@ -198,8 +197,8 @@ public class LookupEndpoint {
      * @throws ResponseStatusException if unable to fetch the data
      */
     @GetMapping("/lc/{lookupType}/{code}")
-    public ResponseEntity<List<?>> getLookupByLTypeAndCode(@PathVariable(value = "lookupType") String lookupType,
-                                                           @PathVariable(value = "code") String code)
+    public ResponseEntity<List<LookupDTO>> getLookupByLTypeAndCode(@PathVariable("lookupType") String lookupType,
+                                                           @PathVariable("code") String code)
         throws ResponseStatusException {
         List<LookupDTO> lookupDTOS = null;
         List<?> lookups = lookupService.findAll(lookupType);
@@ -221,7 +220,7 @@ public class LookupEndpoint {
      * @throws ResponseStatusException if unable to fetch the lookup data
      */
     @GetMapping("/country/code/{code}")
-    public ResponseEntity<List<?>> getCountryByCode(@PathVariable(value = "code") String code)
+    public ResponseEntity<List<LookupDTO>> getCountryByCode(@PathVariable("code") String code)
         throws ResponseStatusException {
         return getLookupByLTypeAndCode("Country", code);
     }
@@ -234,9 +233,24 @@ public class LookupEndpoint {
      * @throws ResponseStatusException if unable to fetch the lookup data
      */
     @GetMapping("/destination/code/{code}")
-    public ResponseEntity<List<?>> getDestinationByCode(@PathVariable(value = "code") String code)
+    public ResponseEntity<List<LookupDTO>> getDestinationByCode(@PathVariable("code") String code)
             throws ResponseStatusException {
         return getLookupByLTypeAndCode("Destination", code);
+    }
+
+    /**
+     * Gets destination by id.
+     *
+     * @param id the id
+     * @return list of objects
+     * @throws ResponseStatusException if unable to fetch the lookup data
+     */
+    @GetMapping("/destination/id/{id}")
+    public ResponseEntity<List<?>> getDestinationById(@PathVariable("id") Long id)
+        throws ResponseStatusException {
+
+      List<?> destinations = lookupService.findById("Destination", id);
+      return ResponseEntity.ok(!CollectionUtils.isEmpty(destinations) ? destinations : Collections.emptyList());
     }
 
     /**
@@ -347,7 +361,7 @@ public class LookupEndpoint {
      * @return list of objects
      */
     @GetMapping("/flightCode/code/{code}")
-    public ResponseEntity<List<?>> getFlightDetailsByCode(@PathVariable ("code") String code) {
+    public ResponseEntity<List<LookupDTO>> getFlightDetailsByCode(@PathVariable ("code") String code) {
         return getLookupByLTypeAndCode("Flight", code);
     }
 
