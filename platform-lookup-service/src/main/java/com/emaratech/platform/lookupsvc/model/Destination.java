@@ -9,6 +9,8 @@ import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -16,12 +18,29 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 /**
  * Destination class for holding the destination data.
  */
-@Getter
-@Setter
 public class Destination implements Serializable {
+    /**
+     *
+     *
+     * @param destinationId
+     * @param destinationNameAr
+     * @param destinationNameEn
+     * @param destinationCode
+     */
+    public Destination(BigDecimal destinationId, String destinationNameAr, String destinationNameEn, String destinationCode) {
+        this.destinationId = destinationId;
+        this.destinationNameAr = destinationNameAr;
+        this.destinationNameEn = destinationNameEn;
+        this.destinationCode = destinationCode;
+    }
 
     @JsonProperty(value = "id")
     private BigDecimal destinationId;
@@ -69,6 +88,7 @@ public class Destination implements Serializable {
                 .append(destinationId, that.destinationId)
                 .append(destinationNameAr, that.destinationNameAr)
                 .append(destinationNameEn, that.destinationNameEn)
+                .append(destinationCode, that.destinationCode)
                 .isEquals();
     }
 
@@ -79,7 +99,7 @@ public class Destination implements Serializable {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(destinationId, destinationNameEn);
+        return Objects.hash(destinationId, destinationCode);
     }
 
     /**
@@ -93,6 +113,7 @@ public class Destination implements Serializable {
                 .add("destinationId=" + destinationId + "")
                 .add("destinationNameAr=" + destinationNameAr + "")
                 .add("destinationNameEn=" + destinationNameEn + "")
+                .add("destinationCode=" + destinationCode + "")
                 .toString();
     }
 

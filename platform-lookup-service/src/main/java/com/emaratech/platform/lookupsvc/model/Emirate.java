@@ -8,6 +8,8 @@ import java.util.StringJoiner;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Size;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -17,10 +19,27 @@ import lombok.Setter;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 /**
  * Emirate Class for holding the Emirate data.
  */
 public class Emirate implements Serializable {
+
+    /**
+     *
+     *
+     * @param emirateId
+     * @param emirateNameEn
+     * @param emirateNameAr
+     * @param code
+     */
+    public Emirate (BigDecimal emirateId, String emirateNameEn, String emirateNameAr, String code) {
+        this.emirateId = emirateId;
+        this.emirateNameEn = emirateNameEn;
+        this.emirateNameAr = emirateNameAr;
+        this.code = code;
+    }
 
     @JsonProperty(value = "id")
     private BigDecimal emirateId;
@@ -64,6 +83,7 @@ public class Emirate implements Serializable {
                 .append(emirateId, that.emirateId)
                 .append(emirateNameEn, that.emirateNameEn)
                 .append(emirateNameAr, that.emirateNameAr)
+                .append(code, that.code)
                 .isEquals();
     }
 
@@ -74,7 +94,7 @@ public class Emirate implements Serializable {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(emirateId, emirateNameEn);
+        return Objects.hash(emirateId, code);
     }
 
     /**
@@ -88,6 +108,7 @@ public class Emirate implements Serializable {
                 .add("emirateId=" + emirateId + "")
                 .add("emirateNameEn=" + emirateNameEn + "")
                 .add("emirateNameAr=" + emirateNameAr + "")
+                .add("code=" + code + "")
                 .toString();
     }
 

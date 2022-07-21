@@ -8,6 +8,8 @@ import java.util.StringJoiner;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Size;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -15,12 +17,27 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 /**
  * Faith class for holding the faith data.
  */
-@Getter
-@Setter
 public class Faith implements Serializable {
+    /**
+     *
+     *
+     * @param faithId
+     * @param faithNameAr
+     * @param faithNameEn
+     */
+    public Faith(BigDecimal faithId, String faithNameAr, String faithNameEn) {
+        this.faithId = faithId;
+        this.faithNameAr = faithNameAr;
+        this.faithNameEn = faithNameEn;
+    }
 
     @JsonProperty(value = "id")
     private BigDecimal faithId;

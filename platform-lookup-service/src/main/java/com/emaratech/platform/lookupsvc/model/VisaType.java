@@ -8,6 +8,8 @@ import java.util.StringJoiner;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Size;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -17,10 +19,26 @@ import lombok.Setter;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 /**
  * VisaType Class for holding the VisaType data.
  */
 public class VisaType implements Serializable {
+    /**
+     *
+     *
+     * @param visaTypeId
+     * @param visaTypeNameEn
+     * @param visaTypeNameAr
+     * @param isBorderVisa
+     */
+    public VisaType(BigDecimal visaTypeId, String visaTypeNameEn, String visaTypeNameAr, BigDecimal isBorderVisa) {
+        this.visaTypeId = visaTypeId;
+        this.visaTypeNameEn = visaTypeNameEn;
+        this.visaTypeNameAr = visaTypeNameAr;
+        this.isBorderVisa = isBorderVisa;
+    }
 
     @JsonProperty(value = "id")
     private BigDecimal visaTypeId;

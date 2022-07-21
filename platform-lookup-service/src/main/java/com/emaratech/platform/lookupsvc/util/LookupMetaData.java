@@ -43,6 +43,7 @@ public class LookupMetaData {
 
         classMetaDataMap.put("VisaType-Id-Setter", "setVisaTypeId");
         classMetaDataMap.put("VisaType-Id-Getter", "getVisaTypeId");
+        classMetaDataMap.put("VisaType-Dup-Field", "getVisaTypeNameEn");
 
         classMetaDataMap.put("Destination-Id-Setter", "setDestinationId");
         classMetaDataMap.put("Destination-Id-Getter", "getDestinationId");
