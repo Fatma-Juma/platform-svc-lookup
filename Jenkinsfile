@@ -13,13 +13,17 @@ pipeline {
     }
 
     environment {
+        projectName                 = git.getProjectName().toLowerCase()
+        deploymentRepoName          = 'platform-lookup-devops'
+        funtionalArea               = 'Vision - Platform-lookup'
+
         //User Provided
         //Build & Nexus Related
         nexusGroupId                = 'ae.emaratech.vision-microservices'
         buildDirectoryAPI           = './platform-lookup-web/target/'
         buildFileAPI                = 'platform-lookup-web-0.0.1-SNAPSHOT.jar'
         nexusArtifactTypeAPI        = 'jar'
-        nexusArtifactId             = 'platform-svc-lookup'
+        nexusArtifactId             = projectName
         nexusVersion                = ''
 
         buildDirectoryDB            = './Database/'
@@ -27,7 +31,7 @@ pipeline {
         nexusArtifactTypeDB         = 'zip'
 
         //Sonar Related
-        sonarProjectKey             = 'platform-svc-lookup'
+        sonarProjectKey             = projectName
         //sonarSources                = ''
         //sonarTests                  = ''
         //sonarBinaries               = ''
@@ -38,12 +42,9 @@ pipeline {
         mailTo                      = 'vision.core@emaratech.ae,devops.scm@emaratech.ae'
         
         //System Provided
-        deploymentRepoName          = 'platform-svc-lookup'
-        deploymentRepoAddress       = 'emt-devops-projects/platform-svc-lookup-devops.git'
-        projectName                 = 'platform-svc-lookup'
+        deploymentRepoAddress       = "emt-devops-projects/${deploymentRepoName}.git"
         branchName                  = BRANCH_NAME.toLowerCase()
         quitPipeline                = false
-        funtionalArea               = 'Vision - Platform-lookup'
         nexusRepo                   = 'maven-vision'
     }
 
@@ -53,13 +54,12 @@ pipeline {
                 script {
                     tagName             = branchName
                     if (branchName == 'develop' || branchName == 'develop-test' ) {
-                        tagName         = "planned-qmg-platform-lookup-service-${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
+                        tagName         = "planned-qmg-service-${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
                     }
                     echo "branchName:${branchName}, tagName:${tagName}"
                     utils.abortPreviousRunningBuilds()
                     (branchToCheckout, tagName, quitPipeline)   = utils.getDeploymentEnv(branchName, tagName)
                     (releaseTicket, releaseVersion)             = git.getCommitMessage()
-
                     jiraIssueStatus                             = jira.getIssueStatusFromKey(releaseTicket)
                     checkApprover                               = check.deploymentCondition(branchToCheckout, jiraIssueStatus, tagName, true, releaseTicket, tagName, funtionalArea)
     
@@ -119,7 +119,6 @@ pipeline {
             }
         }
 
-/*
         stage('Trigger Deployment Pipeline') {
             when {
                 expression { quitPipeline == false && checkApprover == true }
@@ -130,7 +129,7 @@ pipeline {
                 }
             }
         }
-*/
+
 
         stage('Static Code Analysis') {
             when {
@@ -147,7 +146,7 @@ pipeline {
     }
  
     post {
- /*
+
         always {
             script {
                 if (checkApprover == false) {
@@ -158,7 +157,7 @@ pipeline {
                 }
             }
         }
-*/
+
         cleanup {
             script {
                 utils.workspaceCleanup(WORKSPACE)
