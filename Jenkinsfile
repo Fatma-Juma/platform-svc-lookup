@@ -23,7 +23,7 @@ pipeline {
         buildDirectoryAPI           = './platform-lookup-web/target/'
         buildFileAPI                = 'platform-lookup-web-0.0.1-SNAPSHOT.jar'
         nexusArtifactTypeAPI        = 'jar'
-        nexusArtifactId             = projectName
+        nexusArtifactId             = "${projectName}"
         nexusVersion                = ''
 
         buildDirectoryDB            = './Database/'
@@ -31,7 +31,7 @@ pipeline {
         nexusArtifactTypeDB         = 'zip'
 
         //Sonar Related
-        sonarProjectKey             = projectName
+        sonarProjectKey             = "${projectName}"
         //sonarSources                = ''
         //sonarTests                  = ''
         //sonarBinaries               = ''
