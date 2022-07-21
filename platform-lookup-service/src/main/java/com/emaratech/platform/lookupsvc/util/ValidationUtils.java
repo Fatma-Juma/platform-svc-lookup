@@ -22,7 +22,7 @@ public class ValidationUtils {
     }
 
     /**
-     * validates the class fields data.
+     * validates the class field data.
      *
      * @param targetClass
      * @return set of violations
