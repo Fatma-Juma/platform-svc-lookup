@@ -2,7 +2,6 @@ package com.emaratech.platform.lookupsvc.util;
 
 import java.util.Set;
 
-import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 
@@ -16,7 +15,14 @@ import org.springframework.stereotype.Component;
 public class ValidationUtils {
 
     /**
-     * validates the class fields data.
+     * Makes the constructor private.
+     */
+    private ValidationUtils() {
+
+    }
+
+    /**
+     * validates the class field data.
      *
      * @param targetClass
      * @return set of violations
@@ -27,9 +33,8 @@ public class ValidationUtils {
                 .configure()
                 .messageInterpolator(new ParameterMessageInterpolator())
                 .buildValidatorFactory()
-                .getValidator();;
-        Set<ConstraintViolation<Object>> constraintViolations = validator.validate(targetClass);
-        return constraintViolations;
+                .getValidator();
+            return validator.validate(targetClass);
     }
 
 }
