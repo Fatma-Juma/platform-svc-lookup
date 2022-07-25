@@ -139,7 +139,7 @@ public class LookupEndpoint {
     public ResponseEntity<List<LookupSubResponse>> getGccCountries() throws ResponseStatusException {
 
         List<Country> lookups = (List<Country>) lookupService
-                .findAll("Country").stream()
+                .findAll(LookupConstants.COUNTRY_LOOKUP_NAME).stream()
                 .filter(country -> {
                     Country newCountryObj = (Country) country;
                     return newCountryObj.getIsGcc().intValue() == 1 && newCountryObj.getIsArchived().intValue() == 0;
@@ -159,7 +159,7 @@ public class LookupEndpoint {
     public ResponseEntity<List<LookupSubResponse>> getArabCountries() throws ResponseStatusException {
 
         List<Country> lookups = (List<Country>) lookupService
-                .findAll("Country").stream()
+                .findAll(LookupConstants.COUNTRY_LOOKUP_NAME).stream()
                 .filter(country -> {
                     Country newCountryObj = (Country) country;
                     return newCountryObj.getIsArabNation().intValue() == 1;
@@ -179,7 +179,7 @@ public class LookupEndpoint {
     public ResponseEntity<List<LookupSubResponse>> getAlternateCountries() throws ResponseStatusException {
 
         List<LookupSubResponse> countryDTOList = lookupService
-                .findAll("AlternateCountryCode").stream().map(obj -> {
+                .findAll(LookupConstants.ALTERNATE_COUNTRY_CODE_LOOKUP_NAME).stream().map(obj -> {
                     AlternateCountryCode alternateCountryCode = (AlternateCountryCode) obj;
                     return new LookupDTO(alternateCountryCode.getCountryId().longValue(), alternateCountryCode.getAlternateCountryCode());
                 }).collect(Collectors.toList());
@@ -222,7 +222,7 @@ public class LookupEndpoint {
     @GetMapping("/country/code/{code}")
     public ResponseEntity<List<LookupDTO>> getCountryByCode(@PathVariable("code") String code)
         throws ResponseStatusException {
-        return getLookupByLTypeAndCode("Country", code);
+        return getLookupByLTypeAndCode(LookupConstants.COUNTRY_LOOKUP_NAME, code);
     }
 
     /**
@@ -235,7 +235,7 @@ public class LookupEndpoint {
     @GetMapping("/destination/code/{code}")
     public ResponseEntity<List<LookupDTO>> getDestinationByCode(@PathVariable("code") String code)
             throws ResponseStatusException {
-        return getLookupByLTypeAndCode("Destination", code);
+        return getLookupByLTypeAndCode(LookupConstants.DESTINATION_LOOKUP_NAME, code);
     }
 
     /**
@@ -249,7 +249,7 @@ public class LookupEndpoint {
     public ResponseEntity<List<?>> getDestinationById(@PathVariable("id") Long id)
         throws ResponseStatusException {
 
-      List<?> destinations = lookupService.findById("Destination", id);
+      List<?> destinations = lookupService.findById(LookupConstants.DESTINATION_LOOKUP_NAME, id);
       return ResponseEntity.ok(!CollectionUtils.isEmpty(destinations) ? destinations : Collections.emptyList());
     }
 
@@ -262,14 +262,14 @@ public class LookupEndpoint {
      */
     @GetMapping("/city/{emirateId}")
     public ResponseEntity<List<LookupDTO>> getCityByEmiratesId(@PathVariable("emirateId") Long emirateId) throws ResponseStatusException {
-        List<City> lookups = (List<City>) lookupService.findAll("City")
+        List<City> lookups = (List<City>) lookupService.findAll(LookupConstants.CITY_LOOKUP_NAME)
                 .stream().filter(obj -> {
                     City city = (City) obj;
                     return city.getEmirateId().longValue() == emirateId;
                 }).collect(Collectors.toList());
 
         return ResponseEntity.ok(!CollectionUtils.isEmpty(lookups) ? conversionHelper
-                .buildPartialLookupResponse(lookups, "City") : Collections.emptyList());
+                .buildPartialLookupResponse(lookups, LookupConstants.CITY_LOOKUP_NAME) : Collections.emptyList());
     }
 
     /**
@@ -282,14 +282,14 @@ public class LookupEndpoint {
     @GetMapping("/area/{cityId}")
     public ResponseEntity<List<LookupDTO>> getAreaByCity(@PathVariable("cityId") Long cityId) throws ResponseStatusException {
 
-        List<Area> lookups = (List<Area>) lookupService.findAll("Area")
+        List<Area> lookups = (List<Area>) lookupService.findAll(LookupConstants.AREA_LOOKUP_NAME)
                 .stream().filter(obj -> {
                     Area area = (Area) obj;
                     return area.getCityId() != null && area.getCityId().longValue() == cityId;
                 }).collect(Collectors.toList());
 
         return ResponseEntity.ok(!CollectionUtils.isEmpty(lookups) ? conversionHelper
-                .buildPartialLookupResponse(lookups, "Area") : Collections.emptyList());
+                .buildPartialLookupResponse(lookups, LookupConstants.AREA_LOOKUP_NAME) : Collections.emptyList());
     }
 
     /**
@@ -300,7 +300,7 @@ public class LookupEndpoint {
      */
     @GetMapping("/faith")
     public ResponseEntity<List<LookupDTO>> getLookupFaith() throws ResponseStatusException {
-        List<Faith> faithList = (List<Faith>) lookupService.findAll("Faith");
+        List<Faith> faithList = (List<Faith>) lookupService.findAll(LookupConstants.FAITH_LOOKUP_NAME);
 
         return ResponseEntity.ok(faithList.stream().map(faith -> {
             LookupDTO lookupDTO = new LookupDTO(faith.getFaithId().longValue(), faith.getFaithNameEn(), faith.getFaithNameAr(),
@@ -319,7 +319,7 @@ public class LookupEndpoint {
     public ResponseEntity<List<LookupSubResponse>> getBorderVisaList() throws ResponseStatusException {
 
         List<VisaType> visaTypeList = (List<VisaType>) lookupService
-                .findAll("VisaType").stream().filter(obj -> {
+                .findAll(LookupConstants.VISA_TYPE_LOOKUP_NAME).stream().filter(obj -> {
                     VisaType visaType = (VisaType) obj;
                     return visaType.getIsBorderVisa().intValue() == 1;
                 }).collect(Collectors.toList());
@@ -362,7 +362,7 @@ public class LookupEndpoint {
      */
     @GetMapping("/flightCode/code/{code}")
     public ResponseEntity<List<LookupDTO>> getFlightDetailsByCode(@PathVariable ("code") String code) {
-        return getLookupByLTypeAndCode("Flight", code);
+        return getLookupByLTypeAndCode(LookupConstants.FLIGHT_LOOKUP_NAME, code);
     }
 
     /**
