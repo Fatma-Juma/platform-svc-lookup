@@ -31,6 +31,7 @@
         <jakarta.el.version>4.0.2</jakarta.el.version>
     </properties>
 
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -110,6 +111,63 @@
         </dependency>
 
     </dependencies>
+
+    <profiles>
+        <profile>
+            <id>nexus-emaratech</id>
+            <!--Override the repository (and pluginRepository) "central" from the Maven Super POM
+                  to activate snapshots for both! -->
+            <repositories>
+
+                <repository>
+                    <id>snapshots</id>
+                    <url>http://nexus.apps.devops.emaratech.ae/repository/maven-snapshots/</url>
+                    <releases>
+                        <enabled>false</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </repository>
+
+                <repository>
+                    <id>central</id>
+                    <url>http://nexus.apps.devops.emaratech.ae/repository/maven-central/</url>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </repository>
+
+                <repository>
+                    <id>maven-releases</id>
+                    <url>http://nexus.apps.devops.emaratech.ae/repository/maven-vision/</url>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </repository>
+
+            </repositories>
+
+            <pluginRepositories>
+                <pluginRepository>
+                    <id>central</id>
+                    <url>http://nexus.apps.devops.emaratech.ae/repository/maven-central/</url>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </pluginRepository>
+            </pluginRepositories>
+        </profile>
+    </profiles>
     <build>
         <plugins>
             <plugin>
