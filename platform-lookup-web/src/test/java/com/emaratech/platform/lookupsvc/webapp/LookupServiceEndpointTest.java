@@ -1,25 +1,24 @@
 package com.emaratech.platform.lookupsvc.webapp;
 
-import com.emaratech.platform.lookupsvc.api.LookupService;
-import com.emaratech.platform.lookupsvc.model.Country;
-import com.emaratech.platform.lookupsvc.webapp.endpoint.LookupServiceEndpoint;
-import com.emaratech.platform.lookupsvc.webapp.model.LookupConstants;
-import com.emaratech.platform.lookupsvc.webapp.model.LookupDTO;
-import com.emaratech.platform.lookupsvc.webapp.util.ConversionHelper;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.server.ResponseStatusException;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.server.ResponseStatusException;
+
+import com.emaratech.platform.lookupsvc.api.LookupService;
+import com.emaratech.platform.lookupsvc.webapp.endpoint.LookupServiceEndpoint;
+import com.emaratech.platform.lookupsvc.webapp.model.LookupConstants;
+import com.emaratech.platform.lookupsvc.webapp.model.LookupDTO;
+import com.emaratech.platform.lookupsvc.webapp.util.ConversionHelper;
 
 /**
  * Unit test for {@code LookupServiceEndpointTest}.

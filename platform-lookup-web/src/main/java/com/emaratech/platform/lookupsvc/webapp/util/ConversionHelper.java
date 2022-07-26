@@ -94,6 +94,9 @@ public class ConversionHelper {
 
         return buildPartialLookupResponse(sourceList.stream().filter(obj -> {
             String getterMethodForCode = lookupMetaData.getMethodNameForDuplicationForEntity(entityName);
+            if (getterMethodForCode.contains(",")) {
+                getterMethodForCode = getterMethodForCode.split(",")[0];
+            }
             String val = (String) ConversionUtils.getMethodValueByReflection(getterMethodForCode, obj);
             return val.equalsIgnoreCase(code.toUpperCase());
         }).collect(Collectors.toList()), entityName);
