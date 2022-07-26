@@ -8,13 +8,13 @@ import java.util.StringJoiner;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Size;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
@@ -25,19 +25,6 @@ import lombok.Setter;
  * Area Class for holding the area data.
  */
 public class Area implements Serializable {
-    /**
-     *
-     *
-     * @param areaId
-     * @param areaNameAr
-     * @param areaNameEn
-     */
-    public Area(BigDecimal areaId, String areaNameAr, String areaNameEn) {
-        this.areaId = areaId;
-        this.areaNameAr = areaNameAr;
-        this.areaNameEn = areaNameEn;
-    }
-
     @JsonProperty(value = "id")
     private BigDecimal areaId;
 
@@ -56,6 +43,19 @@ public class Area implements Serializable {
 
     @Digits(integer = 1, fraction = 0, message = "IsArchived shouldn't be greater than 1.")
     private BigDecimal isArchived;
+
+    /**
+     *
+     *
+     * @param areaId
+     * @param areaNameAr
+     * @param areaNameEn
+     */
+    public Area(BigDecimal areaId, String areaNameAr, String areaNameEn) {
+        this.areaId = areaId;
+        this.areaNameAr = areaNameAr;
+        this.areaNameEn = areaNameEn;
+    }
 
     /**
      * Checks the equality between two {@code area} objects.

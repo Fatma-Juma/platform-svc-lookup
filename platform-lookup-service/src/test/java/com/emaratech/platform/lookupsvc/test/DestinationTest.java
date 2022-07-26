@@ -1,13 +1,12 @@
 package com.emaratech.platform.lookupsvc.test;
 
-import com.emaratech.platform.lookupsvc.model.Country;
-import com.emaratech.platform.lookupsvc.model.Destination;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.math.BigDecimal;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import org.junit.jupiter.api.Test;
+
+import com.emaratech.platform.lookupsvc.model.Destination;
 
 public class DestinationTest {
     private BigDecimal id = BigDecimal.valueOf(1L);
@@ -82,6 +81,7 @@ public class DestinationTest {
     @Test
     public void testToStringExpectStringDataToBeCreated() {
         Destination destination = new Destination(id, "بيرم، روسيا", "Perm, Russia", "PEE");
-        assertEquals("Destination(destinationId=1, destinationNameAr=بيرم، روسيا, destinationNameEn=Perm, Russia, destinationCode=PEE)", destination.toString());
+        assertEquals("Destination(destinationId=1, destinationNameAr=بيرم، روسيا, destinationNameEn=Perm, Russia, destinationCode=PEE)",
+                     destination.toString());
     }
 }

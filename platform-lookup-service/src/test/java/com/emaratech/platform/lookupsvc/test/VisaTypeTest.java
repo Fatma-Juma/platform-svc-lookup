@@ -1,13 +1,12 @@
 package com.emaratech.platform.lookupsvc.test;
 
-import com.emaratech.platform.lookupsvc.model.Country;
-import com.emaratech.platform.lookupsvc.model.VisaType;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.math.BigDecimal;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import org.junit.jupiter.api.Test;
+
+import com.emaratech.platform.lookupsvc.model.VisaType;
 
 public class VisaTypeTest {
     private BigDecimal id = BigDecimal.valueOf(1L);
@@ -76,13 +75,12 @@ public class VisaTypeTest {
         assertEquals(visaType1.hashCode(), visaType2.hashCode());
     }
 
-
     /**
      * Tests toString method.
      */
     @Test
     public void testToStringExpectStringDataToBeCreated() {
         VisaType visaType = new VisaType(id, "EMBASSY?WORK", "سفاره-عمل", BigDecimal.ZERO);
-        assertEquals("VisaType(visaTypeId=1, visaTypeNameEn=EMBASSY?WORK, visaTypeNameAr=سفاره-عمل, isBorderVisa=0)",visaType.toString());
+        assertEquals("VisaType(visaTypeId=1, visaTypeNameEn=EMBASSY?WORK, visaTypeNameAr=سفاره-عمل, isBorderVisa=0)", visaType.toString());
     }
 }

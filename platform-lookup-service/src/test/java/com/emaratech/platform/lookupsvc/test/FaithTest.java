@@ -1,13 +1,12 @@
 package com.emaratech.platform.lookupsvc.test;
 
-import com.emaratech.platform.lookupsvc.model.Country;
-import com.emaratech.platform.lookupsvc.model.Faith;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.math.BigDecimal;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import org.junit.jupiter.api.Test;
+
+import com.emaratech.platform.lookupsvc.model.Faith;
 
 public class FaithTest {
     private BigDecimal id = BigDecimal.valueOf(1L);

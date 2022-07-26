@@ -8,13 +8,13 @@ import java.util.StringJoiner;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Size;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
@@ -25,21 +25,6 @@ import lombok.Setter;
  * Emirate Class for holding the Emirate data.
  */
 public class Emirate implements Serializable {
-
-    /**
-     *
-     *
-     * @param emirateId
-     * @param emirateNameEn
-     * @param emirateNameAr
-     * @param code
-     */
-    public Emirate (BigDecimal emirateId, String emirateNameEn, String emirateNameAr, String code) {
-        this.emirateId = emirateId;
-        this.emirateNameEn = emirateNameEn;
-        this.emirateNameAr = emirateNameAr;
-        this.code = code;
-    }
 
     @JsonProperty(value = "id")
     private BigDecimal emirateId;
@@ -60,6 +45,21 @@ public class Emirate implements Serializable {
 
     @Digits(integer = 1, fraction = 0, message = "IsArchived shouldn't be greater than 1.")
     private BigDecimal isArchived;
+
+    /**
+     *
+     *
+     * @param emirateId
+     * @param emirateNameEn
+     * @param emirateNameAr
+     * @param code
+     */
+    public Emirate(BigDecimal emirateId, String emirateNameEn, String emirateNameAr, String code) {
+        this.emirateId = emirateId;
+        this.emirateNameEn = emirateNameEn;
+        this.emirateNameAr = emirateNameAr;
+        this.code = code;
+    }
 
     /**
      * Checks the equality between two {@code emirate} objects.

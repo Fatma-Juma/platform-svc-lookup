@@ -8,13 +8,13 @@ import java.util.StringJoiner;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Size;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
@@ -25,21 +25,6 @@ import lombok.Setter;
  * Country Class for holding the country data.
  */
 public class Country implements Serializable {
-
-    /**
-     *
-     *
-     * @param countryId
-     * @param countryNameEn
-     * @param countryNameAr
-     * @param countryCode
-     */
-    public Country(BigDecimal countryId, String countryNameEn, String countryNameAr, String countryCode) {
-        this.countryId = countryId;
-        this.countryNameEn = countryNameEn;
-        this.countryNameAr = countryNameAr;
-        this.countryCode = countryCode;
-    }
 
     @JsonProperty(value = "id")
     private BigDecimal countryId;
@@ -96,6 +81,20 @@ public class Country implements Serializable {
     @Digits(integer = 1, fraction = 0, message = "IsAlternateOfCountryId shouldn't be greater than 1.")
     private BigDecimal isAlternateOfCountryId;
 
+    /**
+     *
+     *
+     * @param countryId
+     * @param countryNameEn
+     * @param countryNameAr
+     * @param countryCode
+     */
+    public Country(BigDecimal countryId, String countryNameEn, String countryNameAr, String countryCode) {
+        this.countryId = countryId;
+        this.countryNameEn = countryNameEn;
+        this.countryNameAr = countryNameAr;
+        this.countryCode = countryCode;
+    }
 
     /**
      * Checks the equality between two {@code country} objects.

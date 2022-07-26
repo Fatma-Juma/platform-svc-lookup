@@ -9,15 +9,14 @@ import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 
 @Getter
 @Setter
@@ -27,21 +26,6 @@ import lombok.Setter;
  * Destination class for holding the destination data.
  */
 public class Destination implements Serializable {
-    /**
-     *
-     *
-     * @param destinationId
-     * @param destinationNameAr
-     * @param destinationNameEn
-     * @param destinationCode
-     */
-    public Destination(BigDecimal destinationId, String destinationNameAr, String destinationNameEn, String destinationCode) {
-        this.destinationId = destinationId;
-        this.destinationNameAr = destinationNameAr;
-        this.destinationNameEn = destinationNameEn;
-        this.destinationCode = destinationCode;
-    }
-
     @JsonProperty(value = "id")
     private BigDecimal destinationId;
 
@@ -65,6 +49,21 @@ public class Destination implements Serializable {
 
     @Digits(integer = 1, fraction = 0, message = "IsArchived shouldn't be greater than 1.")
     private BigDecimal isArchived;
+
+    /**
+     *
+     *
+     * @param destinationId
+     * @param destinationNameAr
+     * @param destinationNameEn
+     * @param destinationCode
+     */
+    public Destination(BigDecimal destinationId, String destinationNameAr, String destinationNameEn, String destinationCode) {
+        this.destinationId = destinationId;
+        this.destinationNameAr = destinationNameAr;
+        this.destinationNameEn = destinationNameEn;
+        this.destinationCode = destinationCode;
+    }
 
     /**
      * Checks the equality between two {@code destination} objects.
@@ -115,6 +114,20 @@ public class Destination implements Serializable {
                 .add("destinationNameEn=" + destinationNameEn + "")
                 .add("destinationCode=" + destinationCode + "")
                 .toString();
+    }
+
+    public enum Name {
+        UNKNOWN_9999(9999), MUSCAT_OMAN(266);
+
+        private long id;
+
+        Name(long identifier) {
+            this.id = identifier;
+        }
+
+        public long getId() {
+            return id;
+        }
     }
 
 }

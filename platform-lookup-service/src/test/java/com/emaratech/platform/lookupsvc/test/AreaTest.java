@@ -1,13 +1,12 @@
 package com.emaratech.platform.lookupsvc.test;
 
-import com.emaratech.platform.lookupsvc.model.Area;
-import com.emaratech.platform.lookupsvc.model.Country;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.math.BigDecimal;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import org.junit.jupiter.api.Test;
+
+import com.emaratech.platform.lookupsvc.model.Area;
 
 public class AreaTest {
     private BigDecimal id = BigDecimal.valueOf(1L);

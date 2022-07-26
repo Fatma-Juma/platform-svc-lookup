@@ -8,15 +8,14 @@ import java.util.StringJoiner;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Size;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 
 @Getter
 @Setter
@@ -26,19 +25,6 @@ import lombok.Setter;
  * Faith class for holding the faith data.
  */
 public class Faith implements Serializable {
-    /**
-     *
-     *
-     * @param faithId
-     * @param faithNameAr
-     * @param faithNameEn
-     */
-    public Faith(BigDecimal faithId, String faithNameAr, String faithNameEn) {
-        this.faithId = faithId;
-        this.faithNameAr = faithNameAr;
-        this.faithNameEn = faithNameEn;
-    }
-
     @JsonProperty(value = "id")
     private BigDecimal faithId;
 
@@ -57,6 +43,19 @@ public class Faith implements Serializable {
 
     @Digits(integer = 1, fraction = 0, message = "IsArchived shouldn't be greater than 1.")
     private BigDecimal isArchived;
+
+    /**
+     *
+     *
+     * @param faithId
+     * @param faithNameAr
+     * @param faithNameEn
+     */
+    public Faith(BigDecimal faithId, String faithNameAr, String faithNameEn) {
+        this.faithId = faithId;
+        this.faithNameAr = faithNameAr;
+        this.faithNameEn = faithNameEn;
+    }
 
     /**
      * Checks the equality between two {@code faith} objects.

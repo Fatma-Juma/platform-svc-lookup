@@ -5,15 +5,14 @@ import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 
 @Getter
 @Setter
@@ -23,6 +22,15 @@ import lombok.Setter;
  * AlternateCountryCode holds the alternate country code data.
  */
 public class AlternateCountryCode implements Serializable {
+
+    @JsonProperty(value = "id")
+    private BigDecimal alternateCountryCodeId;
+
+    private BigDecimal countryId;
+
+    private String alternateCountryCode;
+
+    private BigDecimal isActive;
 
     /**
      *
@@ -34,15 +42,6 @@ public class AlternateCountryCode implements Serializable {
         this.alternateCountryCodeId = alternateCountryCodeId;
         this.alternateCountryCode = alternateCountryCode;
     }
-
-    @JsonProperty(value = "id")
-    private BigDecimal alternateCountryCodeId;
-
-    private BigDecimal countryId;
-
-    private String alternateCountryCode;
-
-    private BigDecimal isActive;
 
     /**
      * Checks the equality between two {@code alternateCountryCode} objects.

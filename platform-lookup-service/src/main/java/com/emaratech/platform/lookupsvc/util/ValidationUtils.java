@@ -29,12 +29,12 @@ public class ValidationUtils {
      */
     public static Set<?> validate(Object targetClass) {
 
-       Validator validator = Validation.byDefaultProvider()
+        Validator validator = Validation.byDefaultProvider()
                 .configure()
                 .messageInterpolator(new ParameterMessageInterpolator())
                 .buildValidatorFactory()
                 .getValidator();
-            return validator.validate(targetClass);
+        return validator.validate(targetClass);
     }
 
 }

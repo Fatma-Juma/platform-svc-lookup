@@ -121,7 +121,7 @@ public class ConversionUtils {
         final AtomicBoolean isExist = new AtomicBoolean(false);
         listData.forEach(obj -> {
             String[] existingValues = new String[valuesToCompare.length];
-           int index = 0;
+            int index = 0;
             for (String methodName : getterMethodsName) {
                 existingValues[index] = String.valueOf(getMethodValueByReflection(methodName, obj));
                 index++;
@@ -139,7 +139,7 @@ public class ConversionUtils {
 
         });
 
-      return isExist.get();
+        return isExist.get();
     }
 
     /**

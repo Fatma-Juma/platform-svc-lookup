@@ -8,13 +8,13 @@ import java.util.StringJoiner;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Size;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
@@ -24,19 +24,7 @@ import lombok.Setter;
 /**
  * City Class for holding the city data.
  */
-public class City implements Serializable{
-        /**
-         *
-         *
-         * @param cityId
-         * @param cityNameEn
-         * @param cityNameAr
-         */
-        public City(BigDecimal cityId, String cityNameEn, String cityNameAr) {
-            this.cityId = cityId;
-            this.cityNameEn = cityNameEn;
-            this.cityNameAr = cityNameAr;
-        }
+public class City implements Serializable {
     @JsonProperty(value = "id")
     private BigDecimal cityId;
 
@@ -58,6 +46,19 @@ public class City implements Serializable{
 
     @Digits(integer = 1, fraction = 0, message = "IsArchived shouldn't be greater than 1.")
     private BigDecimal isArchived;
+
+    /**
+     *
+     *
+     * @param cityId
+     * @param cityNameEn
+     * @param cityNameAr
+     */
+    public City(BigDecimal cityId, String cityNameEn, String cityNameAr) {
+        this.cityId = cityId;
+        this.cityNameEn = cityNameEn;
+        this.cityNameAr = cityNameAr;
+    }
 
     /**
      * Checks the equality between two {@code city} objects.
