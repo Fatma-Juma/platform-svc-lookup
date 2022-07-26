@@ -46,7 +46,7 @@ public class LookupServiceEndpointTest {
      */
 
     @Test
-    public void testGetLookupList() throws ResponseStatusException {
+    public void testGetLookupListAndExpectListInResponse() throws ResponseStatusException {
 
         when(lookupService.findAll(LookupConstants.COUNTRY_LOOKUP_NAME)).thenReturn(getLookupDtoStubList());
         ResponseEntity<List<LookupDTO>> response = classUnderTest.getLookupList(LookupConstants.COUNTRY_LOOKUP_NAME);
