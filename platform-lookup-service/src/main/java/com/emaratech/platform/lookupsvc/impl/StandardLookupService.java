@@ -2,7 +2,7 @@ package com.emaratech.platform.lookupsvc.impl;
 
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
-import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.emaratech.platform.lookupsvc.api.InvalidDataException;
@@ -84,13 +85,17 @@ public class StandardLookupService implements LookupService {
     @Override
     public List<?> findById(String entityName, Long id) throws ResponseStatusException {
         try {
-            List<?> listData = getExistingData(entityName);
+            Class clazz = ConversionUtils.getClassFromString(entityName);
+            if (Objects.isNull(clazz)) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Entity Name not found: [" + entityName + "]");
+            }
+            List<?> listData = getExistingData(clazz);
             if (!CollectionUtils.isEmpty(listData)) {
                 String getterMethodName = lookupMetaData.getIdGetterForEntity(entityName);
                 listData = listData.stream()
                         .filter(obj -> {
-                            BigDecimal targetId = (BigDecimal) ConversionUtils.getMethodValueByReflection(getterMethodName, obj);
-                            return targetId.longValue() == id;
+                            Long targetId = (Long) ConversionUtils.getMethodValueByReflection(getterMethodName, obj);
+                            return targetId == id;
 
                         }).collect(Collectors.toList());
 
@@ -112,7 +117,7 @@ public class StandardLookupService implements LookupService {
     public void save(String className, String data) throws ResponseStatusException {
         LOG.info("Saving the lookup data : {},to entityName: {}", data, className);
         try {
-            lookupStoreRepository.save(className, createOrAppendData(className, data));
+            lookupStoreRepository.save(className, insertLookup(className, data));
         } catch (InvalidDataException | ConstraintViolationException ex) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
         } catch (Exception ex) {
@@ -126,30 +131,84 @@ public class StandardLookupService implements LookupService {
      */
     @Override
     public void saveRdmsData(String entityName, String data) {
-        lookupStoreRepository.save(entityName, data);
+
+        String value = lookupStoreRepository
+                .findDataImportDetailsByEntity("lookup:entity:" + entityName);
+        if (!StringUtils.hasLength(value)) {
+            // saving the data into redis
+            lookupStoreRepository.save(entityName, data);
+            // saving the importDetails.
+            lookupStoreRepository.saveImportDetails("lookup:import:tables",
+                                                    "entityName= " + entityName + ":importDateTime=" + LocalDateTime.now());
+            // Saving the importDetails for individual key.
+            lookupStoreRepository.save("lookup:entity:" + entityName, LocalDateTime.now().toString());
+        } else {
+            LOG.warn("Data is already imported into Redis for the entity {} ", entityName);
+        }
+    }
+
+    @Override
+    public List<?> getImportDetails() {
+        return lookupStoreRepository.findAllDataImportDetails();
     }
 
     /**
-     * Creates or appends the data into target entity.
+     * Inserts the lookups.
      *
      * @param className the className
      * @param data the data
-     * @return the list of data
-     * @throws InvalidDataException if data is not valid
-     * @throws ConstraintViolationException if data have violations
+     * @return the json data
+     * @throws InvalidDataException if unable to process the json data
      */
-    private String createOrAppendData(String className, String data) throws InvalidDataException,
-        ConstraintViolationException {
-        String requestedData;
-        Object updatedObject;
-        Long newId = 1L;
-
+    private String insertLookup(String className, String data) throws InvalidDataException {
         // Getting the target class
         Class clazz = ConversionUtils.getClassFromString(className);
         // checks class is not null or not.
         if (Objects.isNull(clazz)) {
             throw new InvalidDataException("EntityName is not valid: [" + className + "]");
         }
+        boolean isExist = true;
+        Long newId = 1L;
+        // Getting the existing data
+        List<Object> listData = getExistingData(clazz);
+        if (CollectionUtils.isEmpty(listData)) {
+            isExist = false;
+        } else {
+            String getterMethodName = lookupMetaData.getIdGetterForEntity(clazz.getSimpleName());
+            newId = ConversionUtils.getMaxIdFromEntity(listData, getterMethodName) + 1L;
+        }
+        List<Object> objectList;
+        StringBuilder stringBuilder = new StringBuilder();
+        try {
+            objectList = ConversionUtils.jsonArrayToList(data, clazz, objectMapper);
+            for (Object object : objectList) {
+                stringBuilder.append(createOrAppendData(clazz,
+                                                        objectMapper.writeValueAsString(object), listData, newId, isExist));
+                newId++;
+            }
+        } catch (IOException e) {
+            throw new InvalidDataException("Data is not valid");
+        }
+        return stringBuilder.toString();
+    }
+
+    /**
+     * Creates or appends the data into target entity.
+     *
+     * @param clazz the clazz
+     * @param data the data
+     * @param listData the listData
+     * @param newId the newId
+     * @param isExist the isExist
+     * @return the list of data
+     * @throws InvalidDataException if data is not valid
+     * @throws ConstraintViolationException if data have violations
+     */
+    private String createOrAppendData(Class clazz, String data, List listData, Long newId, boolean isExist) throws InvalidDataException,
+        ConstraintViolationException {
+        String requestedData;
+        Object updatedObject;
+
         // convert json to target class object.
         updatedObject = ConversionUtils.convertJsonToTargetClass(clazz, data, objectMapper);
         if (Objects.isNull(updatedObject)) {
@@ -161,16 +220,13 @@ public class StandardLookupService implements LookupService {
         if (!CollectionUtils.isEmpty(violations)) {
             throw new ConstraintViolationException("Data validation errors.", violations);
         }
-
-        // Getting the existing data
-        List<Object> listData = getExistingData(className);
         // Getting the target class setter method for primary id
-        String setterMethodName = lookupMetaData.getIdSetterForEntity(className);
+        String setterMethodName = lookupMetaData.getIdSetterForEntity(clazz.getSimpleName());
         try {
-            if (!CollectionUtils.isEmpty(listData)) {
+            if (isExist) {
                 LOG.info("Appending the new record..");
                 // validation- duplicate
-                String methodName = lookupMetaData.getMethodNameForDuplicationForEntity(className);
+                String methodName = lookupMetaData.getMethodNameForDuplicationForEntity(clazz.getSimpleName());
                 String[] values = new String[1];
                 String[] methodNames = new String[] {methodName};
                 if (methodName.contains(",")) {
@@ -187,9 +243,6 @@ public class StandardLookupService implements LookupService {
                     String fieldName = methodName.replaceAll("get", "");
                     throw new InvalidDataException("[" + fieldName + "] already exists.");
                 }
-
-                String getterMethodName = lookupMetaData.getIdGetterForEntity(className);
-                newId = ConversionUtils.getMaxIdFromEntity(listData, getterMethodName) + 1L;
             }
             // setting up the id value // list size + 1L or 1L would be new id.
             updatedObject = ConversionUtils.setId(updatedObject, newId, setterMethodName);
@@ -210,25 +263,21 @@ public class StandardLookupService implements LookupService {
     /**
      * Gets the entity existing data list.
      *
-     * @param entityName the entityName
+     * @param clazz the clazz
      * @return List of target entity
      * @throws InvalidDataException if entity is not found or data parsing is
      *             failed
      */
 
-    private List<Object> getExistingData(String entityName) throws InvalidDataException {
+    private List<Object> getExistingData(Class clazz) throws InvalidDataException {
 
-        // Constructing the target EntityObject
-        Class clazz = ConversionUtils.getClassFromString(entityName);
         List<Object> listData;
-        if (Objects.isNull(clazz)) {
-            throw new InvalidDataException("EntityName is not valid: [" + entityName + "]");
-        }
+
         try {
-            String data = lookupStoreRepository.findAll(entityName);
+            String data = lookupStoreRepository.findAll(clazz.getSimpleName());
             listData = ConversionUtils.jsonArrayToList(data, clazz, objectMapper);
         } catch (IOException e) {
-            throw new InvalidDataException("Exception occurred during jsonArrayToLis method processing.");
+            throw new InvalidDataException("Exception occurred during jsonArrayToList method processing.");
         }
         return listData == null ? new ArrayList<>() : listData;
     }

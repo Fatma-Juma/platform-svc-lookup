@@ -44,4 +44,11 @@ public interface LookupService {
      * @param data the data
      */
     void saveRdmsData(String entityName, String data);
+
+    /**
+     *
+     *
+     * @return
+     */
+    List<?> getImportDetails();
 }

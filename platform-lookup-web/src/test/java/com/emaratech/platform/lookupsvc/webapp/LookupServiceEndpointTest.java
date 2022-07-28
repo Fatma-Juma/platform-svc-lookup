@@ -27,7 +27,6 @@ import com.emaratech.platform.lookupsvc.webapp.util.ConversionHelper;
 @ExtendWith(MockitoExtension.class)
 public class LookupServiceEndpointTest {
 
-
     @InjectMocks
     private LookupServiceEndpoint classUnderTest;
 
@@ -38,10 +37,9 @@ public class LookupServiceEndpointTest {
     private ConversionHelper conversionHelper;
 
     /**
-     * Tests
-     * {@link LookupServiceEndpoint#getLookupList(String)}
-     * expect {@code ResponseEntity<List<LookupDTO>>} list of
-     * that contains the lookup data body
+     * Tests {@link LookupServiceEndpoint#getLookupList(String)} expect
+     * {@code ResponseEntity<List<LookupDTO>>} list of that contains the lookup
+     * data body
      *
      * @throws ResponseStatusException if unable to fetch the data
      */
@@ -52,12 +50,10 @@ public class LookupServiceEndpointTest {
         when(lookupService.findAll(LookupConstants.COUNTRY_LOOKUP_NAME)).thenReturn(getLookupDtoStubList());
         ResponseEntity<List<LookupDTO>> response = classUnderTest.getLookupList(LookupConstants.COUNTRY_LOOKUP_NAME);
         assertAll(
-                () -> assertNotNull(response),
-                () -> assertEquals(200, response.getStatusCodeValue()),
-                () -> assertNotNull(response.getBody())
-            );
+                  () -> assertNotNull(response),
+                  () -> assertEquals(200, response.getStatusCodeValue()),
+                  () -> assertNotNull(response.getBody()));
 
-        
     }
 
     /**

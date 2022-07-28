@@ -1,14 +1,13 @@
 package com.emaratech.platform.lookupsvc.model;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-import javax.validation.constraints.Digits;
 import javax.validation.constraints.Size;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.hibernate.validator.constraints.Range;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -26,7 +25,7 @@ import lombok.Setter;
  */
 public class VisaType implements Serializable {
     @JsonProperty(value = "id")
-    private BigDecimal visaTypeId;
+    private Long visaTypeId;
 
     @Size(min = 1, message = "Visa type name shouldn't be less than 1 character.")
     @Size(max = 100, message = "Visa type name shouldn't be greater than 100 characters.")
@@ -38,61 +37,61 @@ public class VisaType implements Serializable {
     @JsonProperty(value = "nameAr")
     private String visaTypeNameAr;
 
-    @Digits(integer = 4, fraction = 0, message = "Validity days before entry shouldn't be greater than 4 digits.")
-    private BigDecimal validityDaysBeforeEntry;
+    @Range(max = 4, message = "Validity days before entry shouldn't be greater than 4 digits.")
+    private Long validityDaysBeforeEntry;
 
-    @Digits(integer = 4, fraction = 0, message = "Validity days after entry shouldn't be greater than 4 digits.")
-    private BigDecimal validityDaysAfterEntry;
+    @Range(max = 4, message = "Validity days after entry shouldn't be greater than 4 digits.")
+    private Long validityDaysAfterEntry;
 
-    @Digits(integer = 4, fraction = 0, message = "Stay days shouldn't be greater than 4 digits.")
-    private BigDecimal stayDays;
+    @Range(max = 4, message = "Stay days shouldn't be greater than 4 digits.")
+    private Long stayDays;
 
-    @Digits(integer = 4, fraction = 0, message = "Stay grace days shouldn't be greater than 4 digits.")
-    private BigDecimal stayGraceDays;
+    @Range(max = 4, message = "Stay grace days shouldn't be greater than 4 digits.")
+    private Long stayGraceDays;
 
-    @Digits(integer = 4, fraction = 0, message = "Extension 1 days shouldn't be greater than 4 digits.")
-    private BigDecimal extension1Days;
+    @Range(max = 4, message = "Extension 1 days shouldn't be greater than 4 digits.")
+    private Long extension1Days;
 
-    @Digits(integer = 4, fraction = 0, message = "Extension 1 grace days shouldn't be greater than 4 digits.")
-    private BigDecimal extension1GraceDays;
+    @Range(max = 4, message = "Extension 1 grace days shouldn't be greater than 4 digits.")
+    private Long extension1GraceDays;
 
-    @Digits(integer = 4, fraction = 0, message = "Extension 2 days shouldn't be greater than 4 digits.")
-    private BigDecimal extension2Days;
+    @Range(max = 4, message = "Extension 2 days shouldn't be greater than 4 digits.")
+    private Long extension2Days;
 
-    @Digits(integer = 4, fraction = 0, message = "Extension 2 grace days shouldn't be greater than 4 digits.")
-    private BigDecimal extension2GraceDays;
+    @Range(max = 4, message = "Extension 2 grace days shouldn't be greater than 4 digits.")
+    private Long extension2GraceDays;
 
-    @Digits(integer = 1, fraction = 0, message = "IsBorderVisa shouldn't be greater than 1.")
-    private BigDecimal isBorderVisa;
+    @Range(max = 1, message = "IsBorderVisa shouldn't be greater than 1.")
+    private Long isBorderVisa;
 
-    @Digits(integer = 1, fraction = 0, message = "IsMultipleEntryVisa shouldn't be greater than 1.")
-    private BigDecimal isMultipleEntryVisa;
+    @Range(max = 1, message = "IsMultipleEntryVisa shouldn't be greater than 1.")
+    private Long isMultipleEntryVisa;
 
-    @Digits(integer = 4, fraction = 0, message = "Violation grace days shouldn't be greater than 4 digits.")
-    private BigDecimal violationGraceDays;
+    @Range(max = 4, message = "Violation grace days shouldn't be greater than 4 digits.")
+    private Long violationGraceDays;
 
-    @Digits(integer = 1, fraction = 0, message = "IsArchived shouldn't be greater than 1.")
-    private BigDecimal isArchived;
+    @Range(max = 1, message = "IsArchived shouldn't be greater than 1.")
+    private Long isArchived;
 
-    private BigDecimal jobCloseAfterDays;
+    private Long jobCloseAfterDays;
 
-    @Digits(integer = 1, fraction = 0, message = "IsAllowedForEstabQuota shouldn't be greater than 1.")
-    private BigDecimal isAllowedForEstabQuota;
+    @Range(max = 1, message = "IsAllowedForEstabQuota shouldn't be greater than 1.")
+    private Long isAllowedForEstabQuota;
 
-    private BigDecimal replaceWithVisaTypeId;
+    private Long replaceWithVisaTypeId;
 
-    @Digits(integer = 1, fraction = 0, message = "IsFromChangeStatusAllowed shouldn't be greater than 1.")
-    private BigDecimal isFromChangeStatusAllowed;
+    @Range(max = 1, message = "IsFromChangeStatusAllowed shouldn't be greater than 1.")
+    private Long isFromChangeStatusAllowed;
 
-    @Digits(integer = 1, fraction = 0, message = "IsToChangeStatusAllowed shouldn't be greater than 1.")
-    private BigDecimal isToChangeStatusAllowed;
+    @Range(max = 1, message = "IsToChangeStatusAllowed shouldn't be greater than 1.")
+    private Long isToChangeStatusAllowed;
 
-    @Digits(integer = 1, fraction = 0, message = "IsAccompaniedAllowed shouldn't be greater than 1.")
-    private BigDecimal isAccompaniedAllowed;
+    @Range(max = 1, message = "IsAccompaniedAllowed shouldn't be greater than 1.")
+    private Long isAccompaniedAllowed;
 
-    private BigDecimal isValidityFromIssueDate;
+    private Long isValidityFromIssueDate;
 
-    private BigDecimal isValidityFromEntryDate;
+    private Long isValidityFromEntryDate;
 
     /**
      *
@@ -102,7 +101,7 @@ public class VisaType implements Serializable {
      * @param visaTypeNameAr
      * @param isBorderVisa
      */
-    public VisaType(BigDecimal visaTypeId, String visaTypeNameEn, String visaTypeNameAr, BigDecimal isBorderVisa) {
+    public VisaType(Long visaTypeId, String visaTypeNameEn, String visaTypeNameAr, Long isBorderVisa) {
         this.visaTypeId = visaTypeId;
         this.visaTypeNameEn = visaTypeNameEn;
         this.visaTypeNameAr = visaTypeNameAr;
