@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.OptionalInt;
@@ -76,9 +75,9 @@ public class ConversionUtils {
     public static <T> T setId(Object clazz, Long newIdValue, String setterMethodName) {
 
         try {
-            Method method = clazz.getClass().getDeclaredMethod(setterMethodName, BigDecimal.class);
+            Method method = clazz.getClass().getDeclaredMethod(setterMethodName, Long.class);
             method.setAccessible(true);
-            method.invoke(clazz, BigDecimal.valueOf(newIdValue));
+            method.invoke(clazz, Long.valueOf(newIdValue));
         } catch (NoSuchMethodException e) {
             LOG.error("Error occurred during the class method fetched : {}", e.getMessage());
             clazz = null;
@@ -99,13 +98,13 @@ public class ConversionUtils {
      * @param getterMethodName the getterMethodName
      * @return Max id
      */
-    public static Integer getMaxIdFromEntity(List<?> listData, String getterMethodName) {
+    public static Long getMaxIdFromEntity(List<?> listData, String getterMethodName) {
 
         OptionalInt maxId = listData.stream().mapToInt(obj -> {
-            BigDecimal cId = (BigDecimal) getMethodValueByReflection(getterMethodName, obj);
+            Long cId = (Long) getMethodValueByReflection(getterMethodName, obj);
             return cId.intValue();
         }).max();
-        return maxId.getAsInt();
+        return (long) maxId.getAsInt();
     }
 
     /**

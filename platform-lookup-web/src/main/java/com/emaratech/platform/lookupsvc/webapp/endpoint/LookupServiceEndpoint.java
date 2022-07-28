@@ -5,34 +5,33 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.invoke.MethodHandles;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.ForkJoinPool;
 import java.util.stream.Collectors;
 
-import javax.validation.Valid;
-
-import com.emaratech.platform.lookupsvc.webapp.model.*;
-import io.swagger.v3.oas.annotations.Hidden;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.async.DeferredResult;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.emaratech.platform.lookupsvc.api.LookupService;
 import com.emaratech.platform.lookupsvc.model.*;
+import com.emaratech.platform.lookupsvc.webapp.model.*;
 import com.emaratech.platform.lookupsvc.webapp.util.ConversionHelper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import io.swagger.v3.oas.annotations.Hidden;
 
 /**
  * Provides the REST APIs for fetching the lookup data.
@@ -73,7 +72,7 @@ public class LookupServiceEndpoint {
      * @param conversionHelper the conversionHelper
      */
     public LookupServiceEndpoint(LookupService lookupService, ObjectMapper objectMapper,
-                                 ConversionHelper conversionHelper) {
+            ConversionHelper conversionHelper) {
         this.lookupService = lookupService;
         this.objectMapper = objectMapper;
         this.conversionHelper = conversionHelper;
@@ -103,22 +102,6 @@ public class LookupServiceEndpoint {
         List<?> lookups = lookupService.findAll(lookupType);
         return ResponseEntity.ok(lookups != null ? conversionHelper
                 .buildPartialLookupResponse(lookups, lookupType) : Collections.emptyList());
-    }
-
-    /**
-     * Saves the lookup data.
-     *
-     * @param lookupRequest the lookupRequest
-     * @return the lookup data
-     * @throws ResponseStatusException if unable to save
-     */
-    @PostMapping
-    public ResponseEntity<String> save(@RequestBody @Valid LookupRequest lookupRequest)
-        throws ResponseStatusException {
-
-        lookupService.save(lookupRequest.getLookupType(), lookupRequest.getLookupData());
-        return new ResponseEntity<>("Saved successfully", HttpStatus.OK);
-
     }
 
     /**
@@ -440,6 +423,11 @@ public class LookupServiceEndpoint {
         return getLookupByLTypeAndCode(LookupConstants.FLIGHT_LOOKUP_NAME, code);
     }
 
+    @GetMapping("/importDetails")
+    public ResponseEntity<List<?>> getDataImportDetails() {
+        return ResponseEntity.ok(lookupService.getImportDetails());
+    }
+
     /**
      * Saving rdms lookup data into redis.
      *
@@ -448,13 +436,11 @@ public class LookupServiceEndpoint {
      * @return response String
      */
     @Hidden
-    @PostMapping("/save-rdms/{lookupType}")
-    public DeferredResult<ResponseEntity<?>> saveOldData(@PathVariable("lookupType") String lookupType,
-                                                         @RequestParam("file") MultipartFile multipartFile) {
+    @PostMapping("/save/{lookupType}")
+    public ResponseEntity<?> saveData(@PathVariable("lookupType") String lookupType,
+                                      @RequestParam("file") MultipartFile multipartFile)
+        throws ResponseStatusException {
         List<?> csvData = null;
-        DeferredResult<ResponseEntity<?>> output = new DeferredResult<>(60000L);
-        output.onTimeout(() -> output.setErrorResult(
-                                                     ResponseEntity.status(HttpStatus.REQUEST_TIMEOUT).body("Request timeout occurred.")));
         try {
             InputStream inputStream = multipartFile.getInputStream();
             File tempFile = new File(System.getProperty("user.dir") + "temp.xlsx");
@@ -462,28 +448,49 @@ public class LookupServiceEndpoint {
             inputStream.transferTo(outputStream);
             inputStream.close();
             outputStream.close();
-            csvData = ConversionHelper.getMapSortedList(tempFile.getPath(), lookupType);
-            tempFile.deleteOnExit();
-            output.setResult(ResponseEntity.ok("Saving data job initiated.."));
+            csvData = ConversionHelper.getMapSortedList(tempFile, lookupType);
+            tempFile.delete();
+            List<?> finalCsvData = csvData;
+
+            LOG.info("Processing in separate thread");
+            lookupService.save(lookupType, objectMapper
+                    .writeValueAsString(finalCsvData));
+
         } catch (Exception ex) {
             LOG.error("Exception occurred during saving the lookup data.", ex);
-            output.setErrorResult(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("INTERNAL_SERVER_ERROR occurred."));
+            return ResponseEntity.internalServerError().body("Data is not saved.");
         }
+        return ResponseEntity.ok("Data is saved successfully.");
+    }
 
-        List<?> finalCsvData = csvData;
-        ForkJoinPool.commonPool().submit(() -> {
-            try {
-                LOG.info("Processing in separate thread");
-                lookupService.saveRdmsData(lookupType, objectMapper
-                        .writeValueAsString(finalCsvData));
-            } catch (JsonProcessingException ex) {
-                LOG.error("Request processing interrupted ", ex);
-                output.setErrorResult(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("INTERNAL_SERVER_ERROR occurred."));
+    /**
+     * Saves the lookup data into Redis.
+     */
+    @EventListener(ApplicationReadyEvent.class)
+    public void init() {
+
+        LOG.info("Starting the data load process into Redis.");
+        try {
+            File[] files = (new File(getClass().getClassLoader().getResource("lookupData").toURI())).listFiles();
+            for (File file : files) {
+                String lookupType = file.getName();
+                String entityName = lookupType.substring(0, lookupType.lastIndexOf("."));
+                try {
+                    List<?> list = ConversionHelper.getMapSortedList(file, entityName);
+                    LOG.info("Starting the data load process into Redis for the entity {} ", entityName);
+                    lookupService.saveRdmsData(entityName, objectMapper
+                            .writeValueAsString(list));
+                    LOG.info("Completed the data load process into Redis for the entity {} ", entityName);
+                } catch (JsonProcessingException exception) {
+                    LOG.warn("Unable to process the data into redis and exception is {} for the entity {} ", exception, entityName);
+                } catch (Exception exception) {
+                    LOG.warn("Unable to mapped the excel data into list and exception is {} for the entity {} ", exception, entityName);
+                }
             }
-
-        });
-
-        return output;
+            LOG.info("Completed the data load process into Redis.");
+        } catch (URISyntaxException exception) {
+            LOG.error("Error while reading the data import files from lookup folder", exception.getReason());
+        }
     }
 
 }

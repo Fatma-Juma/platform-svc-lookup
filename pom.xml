@@ -45,11 +45,6 @@
                 <version>${spring-boot-starter-data-redis.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.github.millij</groupId>
-                <artifactId>poi-object-mapper</artifactId>
-                <version>${poi-object-mapper.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.modelmapper</groupId>
                 <artifactId>modelmapper</artifactId>
                 <version>${modelmapper.version}</version>

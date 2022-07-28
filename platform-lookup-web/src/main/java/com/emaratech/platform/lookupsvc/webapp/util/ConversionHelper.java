@@ -1,16 +1,17 @@
 package com.emaratech.platform.lookupsvc.webapp.util;
 
-import java.math.BigDecimal;
+import java.io.File;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.stereotype.Component;
+
+import com.emaratech.platform.lookupsvc.model.Country;
 import com.emaratech.platform.lookupsvc.util.ConversionUtils;
 import com.emaratech.platform.lookupsvc.util.LookupMetaData;
 import com.emaratech.platform.lookupsvc.webapp.model.LookupDTO;
 import com.emaratech.platform.lookupsvc.webapp.model.LookupSubResponse;
-import org.springframework.stereotype.Component;
-
-import com.emaratech.platform.lookupsvc.model.Country;
+import com.poiji.bind.Poiji;
 
 /**
  * This class provides the conversions methods.
@@ -32,16 +33,14 @@ public class ConversionHelper {
     /**
      * Gets the sorted list.
      *
-     * @param filePath the filePath
+     * @param file the file
      * @param entityName the entityName
      * @return list of objects
      * @throws Exception if unable to mapped the list to target object.
      */
-    public static List<?> getMapSortedList(String filePath, String entityName) throws Exception {
+    public static List<?> getMapSortedList(File file, String entityName) throws Exception {
         Class clazz = Class.forName("com.emaratech.platform.lookupsvc.model." + entityName);
-        List<?> list;
-        ExcelToObjectMapper mapper = new ExcelToObjectMapper(filePath);
-        list = mapper.map(clazz.getNestHost());
+        List<?> list = Poiji.fromExcel(file, clazz);
         list.sort((o, t1) -> -1);
         return list;
     }
@@ -57,8 +56,8 @@ public class ConversionHelper {
 
         return sourceList.stream().map(obj -> {
             String getterMethodName = lookupMetaData.getIdGetterForEntity(entityName);
-            Long id = ((BigDecimal) ConversionUtils
-                    .getMethodValueByReflection(getterMethodName, obj)).longValue();
+            Long id = (Long) ConversionUtils
+                    .getMethodValueByReflection(getterMethodName, obj);
             String nameEn = (String) ConversionUtils
                     .getMethodValueByReflection("get" + entityName + "NameEn", obj);
             String nameAr = (String) ConversionUtils

@@ -48,5 +48,4 @@ public class LookupSvcApplication {
         modelMapper.getConfiguration().setFieldMatchingEnabled(false);
         return modelMapper;
     }
-
 }

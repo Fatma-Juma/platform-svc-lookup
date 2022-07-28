@@ -2,25 +2,23 @@ package com.emaratech.platform.lookupsvc.test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.math.BigDecimal;
-
 import org.junit.jupiter.api.Test;
 
 import com.emaratech.platform.lookupsvc.model.VisaType;
 
 public class VisaTypeTest {
-    private BigDecimal id = BigDecimal.valueOf(1L);
+    private Long id = 1L;
 
     /**
      * Tests the getter for VisaType.
      */
     @Test
     public void testGettersWhenConstructorInvokedExpectAttributesNotNull() {
-        VisaType visaType = new VisaType(id, "Embassy Visit", "سفاره-زياره", BigDecimal.ZERO);
+        VisaType visaType = new VisaType(id, "Embassy Visit", "سفاره-زياره", 0L);
         assertEquals(1L, visaType.getVisaTypeId().longValue());
         assertEquals("Embassy Visit", visaType.getVisaTypeNameEn());
         assertEquals("سفاره-زياره", visaType.getVisaTypeNameAr());
-        assertEquals(BigDecimal.ZERO, visaType.getIsBorderVisa());
+        assertEquals(0L, visaType.getIsBorderVisa());
     }
 
     /**
@@ -32,11 +30,11 @@ public class VisaTypeTest {
         visaType.setVisaTypeId(id);
         visaType.setVisaTypeNameEn("Embassy Visit");
         visaType.setVisaTypeNameAr("سفاره-زياره");
-        visaType.setIsBorderVisa(BigDecimal.ZERO);
+        visaType.setIsBorderVisa(0L);
         assertEquals(1L, visaType.getVisaTypeId().longValue());
         assertEquals("Embassy Visit", visaType.getVisaTypeNameEn());
         assertEquals("سفاره-زياره", visaType.getVisaTypeNameAr());
-        assertEquals(BigDecimal.ZERO, visaType.getIsBorderVisa());
+        assertEquals(0L, visaType.getIsBorderVisa());
     }
 
     /**
@@ -45,8 +43,8 @@ public class VisaTypeTest {
      */
     @Test
     public void testEqualsWhenTwoSameInstanceCreatedExpectEquality() {
-        VisaType visaType1 = new VisaType(id, "Embassy Visit", "سفاره-زياره", BigDecimal.ZERO);
-        VisaType visaType2 = new VisaType(id, "Embassy Visit", "سفاره-زياره", BigDecimal.ZERO);
+        VisaType visaType1 = new VisaType(id, "Embassy Visit", "سفاره-زياره", 0L);
+        VisaType visaType2 = new VisaType(id, "Embassy Visit", "سفاره-زياره", 0L);
 
         assertTrue(visaType1.equals(visaType2));
     }
@@ -57,8 +55,8 @@ public class VisaTypeTest {
      */
     @Test
     public void testEqualsWhenTwoDiffInstanceCreatedExpectInEquality() {
-        VisaType visaType1 = new VisaType(id, "Embassy Visit", "سفاره-زياره", BigDecimal.ZERO);
-        VisaType visaType2 = new VisaType(id, "EMBASSY?WORK", "سفاره-عمل", BigDecimal.ZERO);
+        VisaType visaType1 = new VisaType(id, "Embassy Visit", "سفاره-زياره", 0L);
+        VisaType visaType2 = new VisaType(id, "EMBASSY?WORK", "سفاره-عمل", 0l);
 
         assertFalse(visaType1.equals(visaType2));
 
@@ -70,8 +68,8 @@ public class VisaTypeTest {
      */
     @Test
     public void testHashcodeWhenTwoSameInstanceCreatedExpectSameHashcode() {
-        VisaType visaType1 = new VisaType(id, "EMBASSY?WORK", "سفاره-عمل", BigDecimal.ZERO);
-        VisaType visaType2 = new VisaType(id, "EMBASSY?WORK", "سفاره-عمل", BigDecimal.ZERO);
+        VisaType visaType1 = new VisaType(id, "EMBASSY?WORK", "سفاره-عمل", 0L);
+        VisaType visaType2 = new VisaType(id, "EMBASSY?WORK", "سفاره-عمل", 0L);
         assertEquals(visaType1.hashCode(), visaType2.hashCode());
     }
 
@@ -80,7 +78,7 @@ public class VisaTypeTest {
      */
     @Test
     public void testToStringExpectStringDataToBeCreated() {
-        VisaType visaType = new VisaType(id, "EMBASSY?WORK", "سفاره-عمل", BigDecimal.ZERO);
+        VisaType visaType = new VisaType(id, "EMBASSY?WORK", "سفاره-عمل", 0L);
         assertEquals("VisaType(visaTypeId=1, visaTypeNameEn=EMBASSY?WORK, visaTypeNameAr=سفاره-عمل, isBorderVisa=0)", visaType.toString());
     }
 }

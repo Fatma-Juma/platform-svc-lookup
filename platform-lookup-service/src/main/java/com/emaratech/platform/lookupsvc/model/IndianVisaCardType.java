@@ -30,13 +30,13 @@ public class IndianVisaCardType {
         GREEN_CARD(1, "بطاقة إقامة في الولايات المتحدة", "Green Card"), USA_VISA(2, "تأشيرة الولايات المتحدة", "USA Visa"), UK_EU_VISA(3,
                 "تاشيرات بريطانيا و الاتحاد الاوروبي", "UK EU Visa");
 
-                private long id;;
+        private long id;;
 
         private String descEn;
 
         private String descAr;
 
-Name(long identifier, String ar, String en) {
+        Name(long identifier, String ar, String en) {
             this.id = identifier;
             this.descAr = ar;
             this.descEn = en;

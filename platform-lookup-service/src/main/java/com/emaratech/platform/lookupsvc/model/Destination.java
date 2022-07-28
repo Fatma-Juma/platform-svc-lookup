@@ -1,17 +1,19 @@
 package com.emaratech.platform.lookupsvc.model;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-import javax.validation.constraints.Digits;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.poiji.annotation.ExcelCellName;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,30 +27,37 @@ import lombok.Setter;
 /**
  * Destination class for holding the destination data.
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Destination implements Serializable {
     @JsonProperty(value = "id")
-    private BigDecimal destinationId;
+    @ExcelCellName("DESTINATION_ID")
+    private Long destinationId;
 
     @Size(min = 1, message = "Destination name shouldn't be less than 1 character.")
     @Size(max = 200, message = "Destination name shouldn't be greater than 200 characters.")
     @JsonProperty(value = "nameAr")
+    @ExcelCellName("DESC_AR")
     private String destinationNameAr;
 
     @Size(min = 1, message = "Destination name shouldn't be less than 1 character.")
     @Size(max = 200, message = "Destination name shouldn't be greater than 200 characters.")
     @NotBlank(message = "Destination Name should not be empty.")
     @JsonProperty(value = "nameEn")
+    @ExcelCellName("DESC_AR")
     private String destinationNameEn;
 
-    @Digits(integer = 4, fraction = 0, message = "Country Id shouldn't be greater than 4 digits.")
-    private BigDecimal countryId;
+    @Min(value = 100, message = "Country Id shouldn't be less than 3 digits.")
+    @ExcelCellName("COUNTRY_ID")
+    private Long countryId;
 
     @Size(min = 1, message = "Destination code shouldn't be less than 1 character.")
     @Size(max = 4, message = "Destination code shouldn't be greater than 4 characters.")
+    @ExcelCellName("DESTINATION_CODE")
     private String destinationCode;
 
-    @Digits(integer = 1, fraction = 0, message = "IsArchived shouldn't be greater than 1.")
-    private BigDecimal isArchived;
+    @Max(value = 1, message = "IsArchived shouldn't be greater than 1.")
+    @ExcelCellName("IS_ARCHIVED")
+    private Long isArchived;
 
     /**
      *
@@ -58,7 +67,7 @@ public class Destination implements Serializable {
      * @param destinationNameEn
      * @param destinationCode
      */
-    public Destination(BigDecimal destinationId, String destinationNameAr, String destinationNameEn, String destinationCode) {
+    public Destination(Long destinationId, String destinationNameAr, String destinationNameEn, String destinationCode) {
         this.destinationId = destinationId;
         this.destinationNameAr = destinationNameAr;
         this.destinationNameEn = destinationNameEn;
