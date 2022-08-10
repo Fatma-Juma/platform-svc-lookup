@@ -53,6 +53,14 @@ public class LookupMetaData {
         classMetaDataMap.put("AlternateCountryCode-Id-Getter", "getAlternateCountryCodeId");
         classMetaDataMap.put("AlternateCountryCode-Dup-Field", "getAlternateCountryCode");
 
+        classMetaDataMap.put("Profession-Id-Setter", "setProfessionId");
+        classMetaDataMap.put("Profession-Id-Getter", "getProfessionId");
+        classMetaDataMap.put("Profession-Dup-Field", "getProfessionNameEn");
+
+        classMetaDataMap.put("FlightCode-Id-Setter", "setFlightCodeId");
+        classMetaDataMap.put("FlightCode-Id-Getter", "getFlightCodeId");
+        classMetaDataMap.put("FlightCode-Dup-Field", "getFlightCode");
+
     }
 
     /**

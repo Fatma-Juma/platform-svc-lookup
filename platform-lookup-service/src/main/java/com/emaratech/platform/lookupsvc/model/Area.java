@@ -1,13 +1,18 @@
 package com.emaratech.platform.lookupsvc.model;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-import javax.validation.constraints.Digits;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 
+import com.poiji.annotation.ExcelCellName;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -21,28 +26,41 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
+@Table(name = "AREA_LK")
 /**
  * Area Class for holding the area data.
  */
 public class Area implements Serializable {
     @JsonProperty(value = "id")
-    private BigDecimal areaId;
+    @ExcelCellName("AREA_ID")
+    @Id
+    @Column(name = "AREA_ID")
+    private Long areaId;
 
     @Size(min = 1, message = "Area name shouldn't be less than 1 character.")
     @Size(max = 50, message = "Area name shouldn't be greater than 50 characters.")
     @JsonProperty(value = "nameAr")
+    @ExcelCellName("AREA_AR")
+    @Column(name = "AREA_AR")
     private String areaNameAr;
 
     @Size(min = 1, message = "Area name shouldn't be less than 1 character.")
     @Size(max = 50, message = "Area name shouldn't be greater than 50 characters.")
     @JsonProperty(value = "nameEn")
+    @ExcelCellName("AREA_EN")
+    @Column(name = "AREA_EN")
     private String areaNameEn;
 
-    @Digits(integer = 5, fraction = 0, message = "City Id shouldn't be greater than 5 digits.")
-    private BigDecimal cityId;
+    @Min(value = 100, message = "City Id shouldn't be greater than 5 digits.")
+    @ExcelCellName("CITY_ID")
+    @Column(name = "CITY_ID")
+    private Long cityId;
 
-    @Digits(integer = 1, fraction = 0, message = "IsArchived shouldn't be greater than 1.")
-    private BigDecimal isArchived;
+    @Max(value = 1, message = "IsArchived shouldn't be greater than 1.")
+    @ExcelCellName("IS_ARCHIVED")
+    @Column(name = "IS_ARCHIVED")
+    private Long isArchived; 
 
     /**
      *
@@ -51,7 +69,7 @@ public class Area implements Serializable {
      * @param areaNameAr
      * @param areaNameEn
      */
-    public Area(BigDecimal areaId, String areaNameAr, String areaNameEn) {
+    public Area(Long areaId, String areaNameAr, String areaNameEn) {
         this.areaId = areaId;
         this.areaNameAr = areaNameAr;
         this.areaNameEn = areaNameEn;

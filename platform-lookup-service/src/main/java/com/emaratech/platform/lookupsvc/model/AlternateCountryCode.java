@@ -1,10 +1,10 @@
 package com.emaratech.platform.lookupsvc.model;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.StringJoiner;
 
+import com.poiji.annotation.ExcelCellName;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -24,13 +24,17 @@ import lombok.Setter;
 public class AlternateCountryCode implements Serializable {
 
     @JsonProperty(value = "id")
-    private BigDecimal alternateCountryCodeId;
+    @ExcelCellName("ALTERNATE_COUNTRY_CODE_ID")
+    private Long alternateCountryCodeId;
 
-    private BigDecimal countryId;
+    @ExcelCellName("COUNTRY_ID")
+    private Long countryId;
 
+    @ExcelCellName("ALTERNATE_COUNTRY_CODE")
     private String alternateCountryCode;
 
-    private BigDecimal isActive;
+    @ExcelCellName("IS_ACTIVE")
+    private Long isActive;
 
     /**
      *
@@ -38,7 +42,7 @@ public class AlternateCountryCode implements Serializable {
      * @param alternateCountryCodeId
      * @param alternateCountryCode
      */
-    public AlternateCountryCode(BigDecimal alternateCountryCodeId, String alternateCountryCode) {
+    public AlternateCountryCode(Long alternateCountryCodeId, String alternateCountryCode) {
         this.alternateCountryCodeId = alternateCountryCodeId;
         this.alternateCountryCode = alternateCountryCode;
     }

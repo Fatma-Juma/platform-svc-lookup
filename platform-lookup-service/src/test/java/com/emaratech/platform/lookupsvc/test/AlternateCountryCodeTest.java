@@ -2,14 +2,12 @@ package com.emaratech.platform.lookupsvc.test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.math.BigDecimal;
-
 import org.junit.jupiter.api.Test;
 
 import com.emaratech.platform.lookupsvc.model.AlternateCountryCode;
 
 public class AlternateCountryCodeTest {
-    private BigDecimal id = BigDecimal.valueOf(1L);
+    private Long id = 1L;
 
     /**
      * Tests the getter for AlternateCountryCode.

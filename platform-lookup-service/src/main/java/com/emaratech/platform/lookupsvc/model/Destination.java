@@ -4,6 +4,10 @@ import java.io.Serializable;
 import java.util.Objects;
 import java.util.StringJoiner;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -24,6 +28,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
+@Table(name = "DESTINATION_LK")
 /**
  * Destination class for holding the destination data.
  */
@@ -31,32 +37,39 @@ import lombok.Setter;
 public class Destination implements Serializable {
     @JsonProperty(value = "id")
     @ExcelCellName("DESTINATION_ID")
+    @Id
+    @Column(name = "DESTINATION_ID")
     private Long destinationId;
 
     @Size(min = 1, message = "Destination name shouldn't be less than 1 character.")
     @Size(max = 200, message = "Destination name shouldn't be greater than 200 characters.")
     @JsonProperty(value = "nameAr")
     @ExcelCellName("DESC_AR")
+    @Column(name = "DESC_AR")
     private String destinationNameAr;
 
     @Size(min = 1, message = "Destination name shouldn't be less than 1 character.")
     @Size(max = 200, message = "Destination name shouldn't be greater than 200 characters.")
     @NotBlank(message = "Destination Name should not be empty.")
     @JsonProperty(value = "nameEn")
-    @ExcelCellName("DESC_AR")
+    @ExcelCellName("DESC_EN")
+    @Column(name = "DESC_EN")
     private String destinationNameEn;
 
     @Min(value = 100, message = "Country Id shouldn't be less than 3 digits.")
     @ExcelCellName("COUNTRY_ID")
+    @Column(name = "COUNTRY_ID")
     private Long countryId;
 
     @Size(min = 1, message = "Destination code shouldn't be less than 1 character.")
     @Size(max = 4, message = "Destination code shouldn't be greater than 4 characters.")
     @ExcelCellName("DESTINATION_CODE")
+    @Column(name = "DESTINATION_CODE")
     private String destinationCode;
 
     @Max(value = 1, message = "IsArchived shouldn't be greater than 1.")
     @ExcelCellName("IS_ARCHIVED")
+    @Column(name = "IS_ARCHIVED")
     private Long isArchived;
 
     /**

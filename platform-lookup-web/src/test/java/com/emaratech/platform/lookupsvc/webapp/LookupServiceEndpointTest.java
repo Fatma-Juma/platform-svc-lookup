@@ -283,10 +283,74 @@ public class LookupServiceEndpointTest {
         return baseLookupResponseList;
     }
 
+    /**
+     * Tests
+     * {@link LookupServiceEndpoint#getIndianVisaType()}
+     * expect {@code ResponseEntity<List<LookupSubResponse>>} list of
+     * that contains the lookup data body
+     *
+     * @throws ResponseStatusException if unable to fetch the data
+     */
+    @Test
+    public void testGetIndianVisaTypeAndExpectListInResponse() throws ResponseStatusException {
+        //when(lookupService.findAll("IndianVisaCardType")).thenReturn(getIndianVisaTypeDtoList());
+        ResponseEntity<List<LookupSubResponse>> response = classUnderTest.getIndianVisaType();
+        assertAll(
+                () -> assertNotNull(response),
+                () -> assertEquals(200, response.getStatusCodeValue()),
+                () -> assertNotNull(response.getBody())
+        );
 
 
+    }
+
+    /**
+     * Gets the lookup dto list data.
+     *
+     * @return list of objects
+     */
+
+    private List getIndianVisaTypeDtoList() {
+        List<LookupSubResponse> lookupSubResponseList = new ArrayList<>();
+        LookupSubResponse lookupSubResponse = new LookupSubResponse(1L, "Green Card", "بطاقة إقامة في الولايات المتحدة");
+        lookupSubResponseList.add(lookupSubResponse);
+        return lookupSubResponseList;
+    }
+
+    /**
+     * Tests
+     * {@link LookupServiceEndpoint#getFlightDetailsByCode(String)}
+     * expect {@code ResponseEntity<List<LookupDTO>>} list of
+     * that contains the lookup data body
+     *
+     * @throws ResponseStatusException if unable to fetch the data
+     */
+    @Test
+    public void testGetFlightDetailsByCodeAndExpectListInResponse() throws ResponseStatusException {
+        when(lookupService.findAll(LookupConstants.FLIGHT_CODE_LOOKUP_NAME)).thenReturn(getFlightDetailsByCodeDtoList());
+        String code = "UUU";
+        ResponseEntity<List<LookupDTO>> response = classUnderTest.getFlightDetailsByCode(code);
+        assertAll(
+                () -> assertNotNull(response),
+                () -> assertEquals(200, response.getStatusCodeValue()),
+                () -> assertNotNull(response.getBody())
+        );
 
 
+    }
+
+    /**
+     * Gets the lookup dto list data.
+     *
+     * @return list of objects
+     */
+
+    private List getFlightDetailsByCodeDtoList() {
+        List<LookupDTO> lookupDTOList = new ArrayList<>();
+        LookupDTO lookupDTO = new LookupDTO(276L, "Safe Air Company", "طيران سيف","UUU");
+        lookupDTOList.add(lookupDTO);
+        return lookupDTOList;
+    }
 
 
 

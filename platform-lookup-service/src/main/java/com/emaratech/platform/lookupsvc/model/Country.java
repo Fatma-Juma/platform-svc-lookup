@@ -1,13 +1,18 @@
 package com.emaratech.platform.lookupsvc.model;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-import javax.validation.constraints.Digits;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 
+import com.poiji.annotation.ExcelCellName;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -21,65 +26,100 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
+@Table(name = "COUNTRY_LK")
 /**
  * Country Class for holding the country data.
  */
 public class Country implements Serializable {
 
     @JsonProperty(value = "id")
-    private BigDecimal countryId;
+    @ExcelCellName("COUNTRY_ID")
+    @Id
+    @Column(name = "COUNTRY_ID")
+    private Long countryId;
 
-    @Digits(integer = 2, fraction = 0, message = "Region shouldn't be greater than 2 digits.")
-    private BigDecimal regionId;
+    @Min(value = 1, message = "Region Id shouldn't be greater than 2 digits.")
+    @ExcelCellName("REGION_ID")
+    @Column(name = "REGION_ID")
+    private Long regionId;
 
     @Size(min = 1, message = "Country name shouldn't be less than 1 character.")
     @Size(max = 100, message = "Country name shouldn't be greater than 100 characters.")
     @JsonProperty(value = "nameEn")
+    @ExcelCellName("COUNTRY_NAME_EN")
+    @Column(name = "COUNTRY_NAME_EN")
     private String countryNameEn;
 
     @Size(min = 1, message = "Country name shouldn't be less than 1 character.")
     @Size(max = 100, message = "Country name shouldn't be greater than 100 characters.")
     @JsonProperty(value = "nameAr")
+    @ExcelCellName("COUNTRY_NAME_AR")
+    @Column(name = "COUNTRY_NAME_AR")
     private String countryNameAr;
 
     @Size(min = 3, message = "Country code shouldn't be less than 3 characters.")
     @Size(max = 5, message = "Country code shouldn't be greater than 5 characters.")
+    @ExcelCellName("COUNTRY_CODE")
+    @Column(name = "COUNTRY_CODE")
     private String countryCode;
 
     @Size(min = 3, message = "Nationality shouldn't be less than 3 characters.")
     @Size(max = 50, message = "Nationality shouldn't be greater than 50 characters.")
+    @ExcelCellName("NATIONALITY")
+    @Column(name = "NATIONALITY")
     private String nationality;
 
-    @Digits(integer = 1, fraction = 0, message = "IsTourist shouldn't be greater than 1.")
-    private BigDecimal isTourist;
+    @Max(value = 1, message = "IsTourist shouldn't be greater than 1.")
+    @ExcelCellName("IS_TOURIST")
+    @Column(name = "IS_TOURIST")
+    private Long isTourist;
 
-    @Digits(integer = 1, fraction = 0, message = "IsGCC shouldn't be greater than 1.")
-    private BigDecimal isGcc;
+    @Max(value = 1, message = "IsGCC shouldn't be greater than 1.")
+    @ExcelCellName("IS_GCC")
+    @Column(name = "IS_GCC")
+    private Long isGcc;
 
-    @Digits(integer = 1, fraction = 0, message = "IsMaidAllowed shouldn't be greater than 1.")
-    private BigDecimal isMaidAllowed;
+    @Max(value = 1, message = "IsMaidAllowed shouldn't be greater than 1.")
+    @ExcelCellName("IS_MAID_ALLOWED")
+    @Column(name = "IS_MAID_ALLOWED")
+    private Long isMaidAllowed;
 
-    @Digits(integer = 1, fraction = 0, message = "IsEntryAllowed shouldn't be greater than 1.")
-    private BigDecimal isEntryAllowed;
+    @Max(value = 1, message = "IsEntryAllowed shouldn't be greater than 1.")
+    @ExcelCellName("IS_ENTRY_ALLOWED")
+    @Column(name = "IS_ENTRY_ALLOWED")
+    private Long isEntryAllowed;
 
-    @Digits(integer = 1, fraction = 0, message = "IsReciprocityAllowed shouldn't be greater than 1.")
-    private BigDecimal isReciprocityAllowed;
+    @Max(value = 1, message = "IsReciprocityAllowed shouldn't be greater than 1.")
+    @ExcelCellName("IS_RECIPROCITY_ALLOWED")
+    @Column(name = "IS_RECIPROCITY_ALLOWED")
+    private Long isReciprocityAllowed;
 
-    @Digits(integer = 1, fraction = 0, message = "IsArchived shouldn't be greater than 1.")
-    private BigDecimal isArchived;
+    @Max(value = 1, message = "IsArchived shouldn't be greater than 1.")
+    @ExcelCellName("IS_ARCHIVED")
+    @Column(name = "IS_ARCHIVED")
+    private Long isArchived;
 
     @Size(min = 1, message = "CountryIso shouldn't be less than 1 character.")
     @Size(max = 22, message = "CountryIso shouldn't be greater than 22 characters.")
+    @ExcelCellName("COUNTRY_ISO")
+    @Column(name = "COUNTRY_ISO")
     private String countryIso;
 
-    @Digits(integer = 1, fraction = 0, message = "IsNsdReviewRequired shouldn't be greater than 1.")
-    private BigDecimal isNsdReviewRequired;
+    @Max(value = 1, message = "IsNsdReviewRequired shouldn't be greater than 1.")
+    @ExcelCellName("IS_NSD_REVIEW_REQUIRED")
+    @Column(name = "IS_NSD_REVIEW_REQUIRED")
+    private Long isNsdReviewRequired;
 
-    @Digits(integer = 1, fraction = 0, message = "IsArabNation shouldn't be greater than 1.")
-    private BigDecimal isArabNation;
+    @Max(value = 1, message = "IsArabNation shouldn't be greater than 1.")
+    @ExcelCellName("IS_ARAB_NATION")
+    @Column(name = "IS_ARAB_NATION")
+    private Long isArabNation;
 
-    @Digits(integer = 1, fraction = 0, message = "IsAlternateOfCountryId shouldn't be greater than 1.")
-    private BigDecimal isAlternateOfCountryId;
+    @Max(value = 1, message = "IsAlternateOfCountryId shouldn't be greater than 1.")
+    @ExcelCellName("IS_ALTERNATE_OF_COUNTRY_ID")
+    @Column(name = "IS_ALTERNATE_OF_COUNTRY_ID")
+    private Long isAlternateOfCountryId;
 
     /**
      *
@@ -89,7 +129,7 @@ public class Country implements Serializable {
      * @param countryNameAr
      * @param countryCode
      */
-    public Country(BigDecimal countryId, String countryNameEn, String countryNameAr, String countryCode) {
+    public Country(Long countryId, String countryNameEn, String countryNameAr, String countryCode) {
         this.countryId = countryId;
         this.countryNameEn = countryNameEn;
         this.countryNameAr = countryNameAr;

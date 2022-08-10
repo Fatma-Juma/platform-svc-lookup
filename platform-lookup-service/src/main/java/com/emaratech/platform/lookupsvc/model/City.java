@@ -1,13 +1,18 @@
 package com.emaratech.platform.lookupsvc.model;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-import javax.validation.constraints.Digits;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 
+import com.poiji.annotation.ExcelCellName;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -21,31 +26,46 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
+@Table(name = "CITY_LK")
 /**
  * City Class for holding the city data.
  */
 public class City implements Serializable {
     @JsonProperty(value = "id")
-    private BigDecimal cityId;
+    @ExcelCellName("CITY_ID")
+    @Id
+    @Column(name = "CITY_ID")
+    private Long cityId;
 
-    @Digits(integer = 4, fraction = 0, message = "Country Id shouldn't be greater than 4 digits.")
-    private BigDecimal countryId;
+    @Min(value = 100, message = "Country Id shouldn't be greater than 4 digits.")
+    @ExcelCellName("COUNTRY_ID")
+    @Column(name = "COUNTRY_ID")
+    private Long countryId;
 
     @Size(min = 1, message = "City name shouldn't be less than 1 character.")
     @Size(max = 30, message = "City name shouldn't be greater than 30 characters.")
     @JsonProperty(value = "nameEn")
+    @ExcelCellName("CITY_NAME_EN")
+    @Column(name = "CITY_NAME_EN")
     private String cityNameEn;
 
     @Size(min = 1, message = "City name shouldn't be less than 1 character.")
     @Size(max = 30, message = "City name shouldn't be greater than 30 characters.")
     @JsonProperty(value = "nameAr")
+    @ExcelCellName("CITY_NAME_AR")
+    @Column(name = "CITY_NAME_AR")
     private String cityNameAr;
 
-    @Digits(integer = 1, fraction = 0, message = "Emirate Id shouldn't be greater than 1.")
-    private BigDecimal emirateId;
+    @Min(value = 1, message = "Emirate Id shouldn't be less than 1.")
+    @ExcelCellName("EMIRATE_ID")
+    @Column(name = "EMIRATE_ID")
+    private Long emirateId;
 
-    @Digits(integer = 1, fraction = 0, message = "IsArchived shouldn't be greater than 1.")
-    private BigDecimal isArchived;
+    @Max(value = 1, message = "IsArchived shouldn't be greater than 1.")
+    @ExcelCellName("IS_ARCHIVED")
+    @Column(name = "IS_ARCHIVED")
+    private Long isArchived;
 
     /**
      *
@@ -54,7 +74,7 @@ public class City implements Serializable {
      * @param cityNameEn
      * @param cityNameAr
      */
-    public City(BigDecimal cityId, String cityNameEn, String cityNameAr) {
+    public City(Long cityId, String cityNameEn, String cityNameAr) {
         this.cityId = cityId;
         this.cityNameEn = cityNameEn;
         this.cityNameAr = cityNameAr;

@@ -16,5 +16,5 @@ public class LookupConstants {
 
     public static String ALTERNATE_COUNTRY_CODE_LOOKUP_NAME = "AlternateCountryCode";
 
-    public static String FLIGHT_LOOKUP_NAME = "Flight";
+    public static String FLIGHT_CODE_LOOKUP_NAME = "FlightCode";
 }

@@ -420,7 +420,7 @@ public class LookupServiceEndpoint {
      */
     @GetMapping("/flightCode/code/{code}")
     public ResponseEntity<List<LookupDTO>> getFlightDetailsByCode(@PathVariable("code") String code) {
-        return getLookupByLTypeAndCode(LookupConstants.FLIGHT_LOOKUP_NAME, code);
+        return getLookupByLTypeAndCode(LookupConstants.FLIGHT_CODE_LOOKUP_NAME, code);
     }
 
     @GetMapping("/importDetails")

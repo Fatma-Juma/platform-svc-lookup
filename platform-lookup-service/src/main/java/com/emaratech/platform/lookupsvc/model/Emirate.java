@@ -1,13 +1,17 @@
 package com.emaratech.platform.lookupsvc.model;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-import javax.validation.constraints.Digits;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Size;
 
+import com.poiji.annotation.ExcelCellName;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -16,35 +20,49 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Range;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
+@Table(name = "EMIRATE_LK")
 /**
  * Emirate Class for holding the Emirate data.
  */
 public class Emirate implements Serializable {
 
     @JsonProperty(value = "id")
-    private BigDecimal emirateId;
+    @ExcelCellName("EMIRATE_ID")
+    @Id
+    @Column(name = "EMIRATE_ID")
+    private Long emirateId;
 
     @Size(min = 1, message = "Emirate name shouldn't be less than 1 character.")
     @Size(max = 20, message = "Emirate name shouldn't be greater than 20 characters.")
     @JsonProperty(value = "nameEn")
+    @ExcelCellName("EMIRATE_NAME_EN")
+    @Column(name = "EMIRATE_NAME_EN")
     private String emirateNameEn;
 
     @Size(min = 1, message = "Emirate name shouldn't be less than 1 character.")
     @Size(max = 20, message = "Emirate name shouldn't be greater than 20 characters.")
     @JsonProperty(value = "nameAr")
+    @ExcelCellName("EMIRATE_NAME_AR")
+    @Column(name = "EMIRATE_NAME_AR")
     private String emirateNameAr;
 
     @Size(min = 1, message = "Code shouldn't be less than 1 character.")
     @Size(max = 20, message = "Code shouldn't be greater than 20 characters.")
+    @ExcelCellName("CODE")
+    @Column(name = "CODE")
     private String code;
 
-    @Digits(integer = 1, fraction = 0, message = "IsArchived shouldn't be greater than 1.")
-    private BigDecimal isArchived;
+    @Max(value = 1, message = "IsArchived shouldn't be greater than 1.")
+    @ExcelCellName("IS_ARCHIVED")
+    @Column(name = "IS_ARCHIVED")
+    private Long isArchived;
 
     /**
      *
@@ -54,7 +72,7 @@ public class Emirate implements Serializable {
      * @param emirateNameAr
      * @param code
      */
-    public Emirate(BigDecimal emirateId, String emirateNameEn, String emirateNameAr, String code) {
+    public Emirate(Long emirateId, String emirateNameEn, String emirateNameAr, String code) {
         this.emirateId = emirateId;
         this.emirateNameEn = emirateNameEn;
         this.emirateNameAr = emirateNameAr;
